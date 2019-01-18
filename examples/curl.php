@@ -22,6 +22,6 @@ $factory = new Psr17Factory();
 $handler = new CurlHandler($factory);
 $client = new Client($handler, $middleware);
 
-$request = $factory->createServerRequest('GET', 'http://google.com');
+$request = $factory->createRequest('GET', 'http://google.com');
 
 return $client->sendRequest($request);

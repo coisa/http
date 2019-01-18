@@ -7,9 +7,11 @@
 
 namespace CoiSA\Http;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -32,15 +34,25 @@ final class Client implements ClientInterface
     private $middleware;
 
     /**
+     * @var ServerRequestFactoryInterface|null
+     */
+    private $serverRequestFactory;
+
+    /**
      * Client constructor.
      *
      * @param RequestHandlerInterface $handler
      * @param MiddlewareInterface|null $middleware
+     * @param ServerRequestFactoryInterface|null $serverRequestFactory
      */
-    public function __construct(RequestHandlerInterface $handler, MiddlewareInterface $middleware = null)
-    {
+    public function __construct(
+        RequestHandlerInterface $handler,
+        MiddlewareInterface $middleware = null,
+        ServerRequestFactoryInterface $serverRequestFactory = null
+    ) {
         $this->handler = $handler;
         $this->middleware = $middleware;
+        $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
     }
 
     /**
@@ -51,7 +63,10 @@ final class Client implements ClientInterface
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
         if (!$request instanceof ServerRequestInterface) {
-            // @TODO transform request into a ServerRequestInterface
+            $request = $this->serverRequestFactory->createServerRequest(
+                $request->getMethod(),
+                $request->getUri()
+            );
         }
 
         if (!$this->middleware) {

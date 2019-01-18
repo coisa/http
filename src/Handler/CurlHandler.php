@@ -6,6 +6,7 @@
 
 namespace CoiSA\Http\Handler;
 
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -26,11 +27,11 @@ final class CurlHandler implements RequestHandlerInterface
     /**
      * CurlHandler constructor.
      *
-     * @param ResponseFactoryInterface $responseFactory
+     * @param ResponseFactoryInterface|null $responseFactory
      */
-    public function __construct(ResponseFactoryInterface $responseFactory)
+    public function __construct(ResponseFactoryInterface $responseFactory = null)
     {
-        $this->responseFactory = $responseFactory;
+        $this->responseFactory = $responseFactory ?? new Psr17Factory();
     }
 
     /**
