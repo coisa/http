@@ -2,7 +2,7 @@
 
 /**
  * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
- * @package CoiSA\Http
+ * @package CoiSA\Http\Middleware
  */
 
 namespace CoiSA\Http\Middleware;
@@ -13,11 +13,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class MiddlewareQueue
+ * Class MiddlewareAggregator
  *
- * @package CoiSA\Http
+ * @package CoiSA\Http\Middleware
  */
-final class MiddlewareQueue implements MiddlewareInterface, RequestHandlerInterface
+final class MiddlewareAggregator implements MiddlewareInterface, RequestHandlerInterface
 {
     /**
      * @var \SplQueue<MiddlewareInterface>

@@ -4,7 +4,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use CoiSA\Http\Client;
 use CoiSA\Http\Handler\CurlHandler;
-use CoiSA\Http\Middleware\MiddlewareQueue;
+use CoiSA\Http\Middleware\MiddlewareAggregator;
 use Middlewares\AccessLog;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -13,7 +13,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 $logger = new Logger('example');
 $logger->pushHandler(new StreamHandler('php://stdout'));
 
-$middleware = new MiddlewareQueue(
+$middleware = new MiddlewareAggregator(
     new AccessLog($logger)
 );
 
