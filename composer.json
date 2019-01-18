@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "middlewares/access-log": "^1.1",
+        "middlewares/client-ip": "^1.1",
         "monolog/monolog": "^1.24"
     },
     "autoload": {

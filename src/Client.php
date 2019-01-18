@@ -65,7 +65,8 @@ final class Client implements ClientInterface
         if (!$request instanceof ServerRequestInterface) {
             $request = $this->serverRequestFactory->createServerRequest(
                 $request->getMethod(),
-                $request->getUri()
+                $request->getUri(),
+                $_SERVER
             );
         }
 
