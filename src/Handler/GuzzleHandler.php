@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
-/**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
- * @package CoiSA\Http\Handler
+/*
+ * This file is part of coisa/http.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace CoiSA\Http\Handler;
@@ -36,8 +40,9 @@ final class GuzzleHandler implements RequestHandlerInterface
     /**
      * @param ServerRequestInterface $request
      *
-     * @return ResponseInterface
      * @throws \GuzzleHttp\Exception\GuzzleException
+     *
+     * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
