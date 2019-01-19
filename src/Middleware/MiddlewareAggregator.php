@@ -1,8 +1,11 @@
-<?php
-
-/**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
- * @package CoiSA\Http\Middleware
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/http.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace CoiSA\Http\Middleware;
@@ -58,7 +61,7 @@ final class MiddlewareAggregator implements MiddlewareInterface, RequestHandlerI
     }
 
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      *
      * @return ResponseInterface

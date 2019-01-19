@@ -1,8 +1,11 @@
-<?php
-
-/**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
- * @package CoiSA\Http
+<?php declare(strict_types=1);
+/*
+ * This file is part of coisa/http.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace CoiSA\Http;
@@ -29,29 +32,29 @@ final class Client implements ClientInterface
     private $handler;
 
     /**
-     * @var MiddlewareInterface|null
+     * @var null|MiddlewareInterface
      */
     private $middleware;
 
     /**
-     * @var ServerRequestFactoryInterface|null
+     * @var null|ServerRequestFactoryInterface
      */
     private $serverRequestFactory;
 
     /**
      * Client constructor.
      *
-     * @param RequestHandlerInterface $handler
-     * @param MiddlewareInterface|null $middleware
-     * @param ServerRequestFactoryInterface|null $serverRequestFactory
+     * @param RequestHandlerInterface            $handler
+     * @param null|MiddlewareInterface           $middleware
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
         MiddlewareInterface $middleware = null,
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
-        $this->handler = $handler;
-        $this->middleware = $middleware;
+        $this->handler              = $handler;
+        $this->middleware           = $middleware;
         $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
     }
 

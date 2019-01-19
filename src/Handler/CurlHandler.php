@@ -1,7 +1,11 @@
 <?php declare(strict_types=1);
-/**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
- * @package CoiSA\Http\Handler
+/*
+ * This file is part of coisa/http.
+ *
+ * (c) Felipe Sayão Lobato Abreu <github@felipeabreu.com.br>
+ *
+ * This source file is subject to the license that is bundled
+ * with this source code in the file LICENSE.
  */
 
 namespace CoiSA\Http\Handler;
@@ -27,7 +31,7 @@ final class CurlHandler implements RequestHandlerInterface
     /**
      * CurlHandler constructor.
      *
-     * @param ResponseFactoryInterface|null $responseFactory
+     * @param null|ResponseFactoryInterface $responseFactory
      */
     public function __construct(ResponseFactoryInterface $responseFactory = null)
     {
@@ -41,8 +45,15 @@ final class CurlHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        // @TODO make the curl request
-        var_dump($request);
+        try {
+            $resource = \curl_init((string) $request->getUri());
+            \curl_exec($resource);
+        } catch (\Throwable $throwable) {
+        }
+
+        if (isset($resource) && \is_resource($resource)) {
+            \curl_close($resource);
+        }
 
         return $this->responseFactory->createResponse();
     }
