@@ -28,7 +28,7 @@ final class HttpPlugHandler implements RequestHandlerInterface
     private $client;
 
     /**
-     * PsrClientHandler constructor.
+     * HttpPlugHandler constructor.
      *
      * @param HttpClient $client
      */
