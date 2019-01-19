@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use CoiSA\Http\Client;
+use CoiSA\Http\PsrHttpClient;
 use CoiSA\Http\Handler\HttpPlugHandler;
 use CoiSA\Http\Middleware\MiddlewareAggregator;
 use Http\Client\Curl\Client as CurlClient;
@@ -23,7 +23,7 @@ $middleware = new MiddlewareAggregator(
 $curlClient = new CurlClient();
 
 $handler = new HttpPlugHandler($curlClient);
-$client = new Client($handler, $middleware);
+$client = new PsrHttpClient($handler, $middleware);
 
 $factory = new Psr17Factory();
 $request = $factory->createRequest('GET', 'http://google.com');

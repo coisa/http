@@ -20,11 +20,11 @@ use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class Client
+ * Class PsrHttpClient
  *
  * @package CoiSA\Http
  */
-final class Client implements ClientInterface
+final class PsrHttpClient implements ClientInterface
 {
     /**
      * @var RequestHandlerInterface
