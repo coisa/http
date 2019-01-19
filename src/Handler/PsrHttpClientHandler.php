@@ -16,11 +16,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class PsrClientHandler
+ * Class PsrHttpClientHandler
  *
  * @package CoiSA\Http\Handler
  */
-final class PsrClientHandler implements RequestHandlerInterface
+final class PsrHttpClientHandler implements RequestHandlerInterface
 {
     /**
      * @var ClientInterface
@@ -28,7 +28,7 @@ final class PsrClientHandler implements RequestHandlerInterface
     private $client;
 
     /**
-     * PsrClientHandler constructor.
+     * PsrHttpClientHandler constructor.
      *
      * @param ClientInterface $client
      */
