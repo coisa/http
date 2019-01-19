@@ -7,6 +7,7 @@
     },
     "require": {
         "php": "~7.1",
+        "ext-curl": "*",
         "nyholm/psr7": "^1.0",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
@@ -18,7 +19,8 @@
     "require-dev": {
         "middlewares/access-log": "^1.1",
         "middlewares/client-ip": "^1.1",
-        "monolog/monolog": "^1.24"
+        "monolog/monolog": "^1.24",
+        "php-http/curl-client": "^1.7"
     },
     "autoload": {
         "psr-4": {
