@@ -1,6 +1,12 @@
 {
     "name": "coisa/http",
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Felipe Sayão Lobato Abreu",
+            "email": "github@felipeabreu.com.br"
+        }
+    ],
     "config": {
         "sort-packages": true,
         "prefer-stable" : true,
