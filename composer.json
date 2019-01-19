@@ -1,5 +1,7 @@
 {
     "name": "coisa/http",
+    "description": "PSR Http utility tools",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
