@@ -1,5 +1,6 @@
 {
     "name": "coisa/http",
+    "license": "MIT",
     "config": {
         "sort-packages": true,
         "prefer-stable" : true,
@@ -17,6 +18,7 @@
         "psr/log": "^1.1"
     },
     "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.14",
         "middlewares/access-log": "^1.1",
         "middlewares/client-ip": "^1.1",
         "monolog/monolog": "^1.24",
