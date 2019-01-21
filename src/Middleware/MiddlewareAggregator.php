@@ -10,6 +10,7 @@
 
 namespace CoiSA\Http\Middleware;
 
+use CoiSA\Http\Handler\MiddlewareHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,17 +21,17 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Middleware
  */
-final class MiddlewareAggregator implements MiddlewareInterface, RequestHandlerInterface
+final class MiddlewareAggregator implements MiddlewareInterface
 {
     /**
-     * @var \SplQueue<MiddlewareInterface>
+     * @var MiddlewareInterface[]
      */
     private $middlewares;
 
     /**
-     * @var RequestHandlerInterface
+     * @var int
      */
-    private $handler;
+    private $current = 0;
 
     /**
      * MiddlewareQueue constructor.
@@ -39,25 +40,7 @@ final class MiddlewareAggregator implements MiddlewareInterface, RequestHandlerI
      */
     public function __construct(MiddlewareInterface ...$middlewares)
     {
-        $this->middlewares = new \SplQueue();
-
-        foreach ($middlewares as $middleware) {
-            $this->middlewares->push($middleware);
-        }
-    }
-
-    /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
-     */
-    public function handle(ServerRequestInterface $request): ResponseInterface
-    {
-        if ($this->middlewares->isEmpty()) {
-            return $this->handler->handle($request);
-        }
-
-        return $this->process($request, $this);
+        $this->middlewares = $middlewares;
     }
 
     /**
@@ -68,12 +51,19 @@ final class MiddlewareAggregator implements MiddlewareInterface, RequestHandlerI
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!$this->handler) {
-            $this->handler = $handler;
+        if (!\array_key_exists($this->current, $this->middlewares)) {
+            $this->current = 0;
+
+            return $handler->handle($request);
         }
 
-        $middleware = $this->middlewares->dequeue();
+        $middleware = $this->middlewares[$this->current++];
 
-        return $middleware->process($request, $this);
+        $requestHandler = new MiddlewareHandler(
+            $this,
+            $handler
+        );
+
+        return $middleware->process($request, $requestHandler);
     }
 }
