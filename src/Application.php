@@ -11,10 +11,12 @@
 namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
+use CoiSA\Http\Middleware\EchoBodyMiddleware;
+use CoiSA\Http\Middleware\MiddlewareAggregator;
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
+use CoiSA\Http\Middleware\SendHeadersMiddleware;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -35,8 +37,7 @@ class Application implements ClientInterface, RequestHandlerInterface, Middlewar
     /**
      * Application constructor.
      *
-     * @param ClientInterface               $client
-     * @param null|ResponseFactoryInterface $responseFactory
+     * @param ClientInterface $client
      */
     public function __construct(
         ClientInterface $client
@@ -82,5 +83,24 @@ class Application implements ClientInterface, RequestHandlerInterface, Middlewar
         );
 
         return $middlewareHandler->handle($request);
+    }
+
+    /**
+     * Run the application
+     */
+    public function run(): ResponseInterface
+    {
+        $request = $this->serverRequestFactory->createServerRequest(
+            $_SERVER['REQUEST_METHOD'],
+            'http' . (isset($_SERVER['HTTPS']) ? 's' : '') . '://' . "{$_SERVER['HTTP_HOST']}/{$_SERVER['REQUEST_URI']}",
+            $_SERVER
+        );
+
+        $middleware = new MiddlewareAggregator(
+            new SendHeadersMiddleware(),
+            new EchoBodyMiddleware()
+        );
+
+        return $middleware->process($request, $this);
     }
 }
