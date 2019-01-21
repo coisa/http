@@ -10,6 +10,7 @@
 
 namespace CoiSA\Http;
 
+use CoiSA\Http\Handler\ErrorHandler;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -31,26 +32,36 @@ final class PsrHttpClient implements ClientInterface
     private $handler;
 
     /**
+     * @var RequestHandlerInterface
+     */
+    private $errorHandler;
+
+    /**
      * @var null|ServerRequestFactoryInterface
      */
     private $serverRequestFactory;
 
     /**
-     * Client constructor.
+     * PsrHttpClient constructor.
      *
-     * @param RequestHandlerInterface            $handler
+     * @param RequestHandlerInterface            $defaultHandler
+     * @param null|RequestHandlerInterface       $errorHandler
      * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
-        RequestHandlerInterface $handler,
+        RequestHandlerInterface $defaultHandler,
+        RequestHandlerInterface $errorHandler = null,
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
-        $this->handler              = $handler;
+        $this->handler              = $defaultHandler;
+        $this->errorHandler         = $errorHandler;
         $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
     }
 
     /**
      * @param RequestInterface $request
+     *
+     * @throws \Throwable If an exception rise with no error-handler provided
      *
      * @return ResponseInterface
      */
@@ -64,6 +75,16 @@ final class PsrHttpClient implements ClientInterface
             );
         }
 
-        return $this->handler->handle($request);
+        try {
+            return $this->handler->handle($request);
+        } catch (\Throwable $throwable) {
+            if (!$this->errorHandler) {
+                throw $throwable;
+            }
+
+            $handler = new ErrorHandler($throwable, $this->errorHandler);
+
+            return $handler->handle($request);
+        }
     }
 }
