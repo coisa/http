@@ -29,11 +29,6 @@ final class MiddlewareAggregator implements MiddlewareInterface
     private $middlewares;
 
     /**
-     * @var int
-     */
-    private $current = 0;
-
-    /**
      * MiddlewareAggregator constructor.
      *
      * @param MiddlewareInterface ...$middlewares
@@ -51,13 +46,15 @@ final class MiddlewareAggregator implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        if (!\array_key_exists($this->current, $this->middlewares)) {
-            $this->current = 0;
+        $middleware = current($this->middlewares);
+
+        if (!$middleware) {
+            reset($this->middlewares);
 
             return $handler->handle($request);
         }
 
-        $middleware = $this->middlewares[$this->current++];
+        next($this->middlewares);
 
         $requestHandler = new MiddlewareHandler(
             $this,
