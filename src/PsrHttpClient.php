@@ -52,8 +52,6 @@ final class PsrHttpClient implements ClientInterface
     /**
      * @param RequestInterface $request
      *
-     * @throws \Throwable If an exception rise with no error-handler provided
-     *
      * @return ResponseInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
