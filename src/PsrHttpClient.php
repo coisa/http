@@ -44,17 +44,14 @@ final class PsrHttpClient implements ClientInterface
     /**
      * PsrHttpClient constructor.
      *
-     * @param RequestHandlerInterface            $defaultHandler
-     * @param null|RequestHandlerInterface       $errorHandler
-     * @param null|ServerRequestFactoryInterface $serverRequestFactory
+     * @param RequestHandlerInterface $defaultHandler
+     * @param ServerRequestFactoryInterface|null $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $defaultHandler,
-        RequestHandlerInterface $errorHandler = null,
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
         $this->handler              = $defaultHandler;
-        $this->errorHandler         = $errorHandler;
         $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
     }
 
@@ -75,16 +72,6 @@ final class PsrHttpClient implements ClientInterface
             );
         }
 
-        try {
-            return $this->handler->handle($request);
-        } catch (\Throwable $throwable) {
-            if (!$this->errorHandler) {
-                throw $throwable;
-            }
-
-            $handler = new ErrorHandler($throwable, $this->errorHandler);
-
-            return $handler->handle($request);
-        }
+        return $this->handler->handle($request);
     }
 }
