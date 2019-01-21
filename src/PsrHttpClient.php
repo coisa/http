@@ -10,7 +10,6 @@
 
 namespace CoiSA\Http;
 
-use CoiSA\Http\Handler\ErrorHandler;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -32,11 +31,6 @@ final class PsrHttpClient implements ClientInterface
     private $handler;
 
     /**
-     * @var RequestHandlerInterface
-     */
-    private $errorHandler;
-
-    /**
      * @var null|ServerRequestFactoryInterface
      */
     private $serverRequestFactory;
@@ -44,8 +38,8 @@ final class PsrHttpClient implements ClientInterface
     /**
      * PsrHttpClient constructor.
      *
-     * @param RequestHandlerInterface $defaultHandler
-     * @param ServerRequestFactoryInterface|null $serverRequestFactory
+     * @param RequestHandlerInterface            $defaultHandler
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $defaultHandler,
