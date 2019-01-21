@@ -76,11 +76,11 @@ class Application implements ClientInterface, RequestHandlerInterface, Middlewar
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $middleware = new MiddlewareHandler(
+        $middlewareHandler = new MiddlewareHandler(
             new RequestHandlerMiddleware($this),
             $handler
         );
 
-        return $middleware->handle($request);
+        return $middlewareHandler->handle($request);
     }
 }
