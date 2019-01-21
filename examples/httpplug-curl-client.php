@@ -16,6 +16,9 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 $logger = new Logger('example');
 $logger->pushHandler(new StreamHandler('php://stdout'));
 
+$factory = new Psr17Factory();
+$request = $factory->createRequest('GET', 'http://google.com');
+
 $middleware = new MiddlewareAggregator(
     new AccessLog($logger),
     new ClientIp()
@@ -30,9 +33,6 @@ $dispatcher = new MiddlewareHandler(
 );
 
 $client = new PsrHttpClient($dispatcher);
-
-$factory = new Psr17Factory();
-$request = $factory->createRequest('GET', 'http://google.com');
-
 $respose = $client->sendRequest($request);
+
 echo $respose->getBody();
