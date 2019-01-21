@@ -11,7 +11,10 @@
 namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
-use CoiSA\Http\Middleware\RequestHandlerMiddleware;
+use CoiSA\Http\Handler\PsrHttpClientHandler;
+use CoiSA\Http\Middleware\EchoBodyMiddleware;
+use CoiSA\Http\Middleware\MiddlewareAggregator;
+use CoiSA\Http\Middleware\SendHeadersMiddleware;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -24,46 +27,43 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-class Application implements ClientInterface, RequestHandlerInterface, MiddlewareInterface
+class Application implements RequestHandlerInterface, MiddlewareInterface
 {
     /**
-     * @var ClientInterface
+     * @var RequestHandlerInterface
      */
-    private $client;
+    private $handler;
 
     /**
      * Application constructor.
      *
-     * @param ClientInterface $client
+     * @param PsrHttpClientHandler $handler
+     * @param MiddlewareAggregator $middlewares
      */
     public function __construct(
-        ClientInterface $client
+        RequestHandlerInterface $handler,
+        MiddlewareInterface $middleware = null
     ) {
-        $this->client = $client;
-    }
+        $middleware = new MiddlewareAggregator(
+            new SendHeadersMiddleware(),
+            new EchoBodyMiddleware(),
+            $middleware
+        );
 
-    /**
-     * @param RequestInterface $request
-     *
-     * @throws \Psr\Http\Client\ClientExceptionInterface
-     *
-     * @return ResponseInterface
-     */
-    public function sendRequest(RequestInterface $request): ResponseInterface
-    {
-        return $this->client->sendRequest($request);
+        $this->handler = new MiddlewareHandler(
+            $middleware,
+            $handler
+        );
     }
 
     /**
      * @param ServerRequestInterface $request
      *
-     * @throws \Psr\Http\Client\ClientExceptionInterface
-     *
      * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->sendRequest($request);
+        return $this->handler->handle($request);
     }
 
     /**
@@ -74,11 +74,6 @@ class Application implements ClientInterface, RequestHandlerInterface, Middlewar
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $middlewareHandler = new MiddlewareHandler(
-            new RequestHandlerMiddleware($this),
-            $handler
-        );
-
-        return $middlewareHandler->handle($request);
+        return $this->handler->process($request, $handler);
     }
 }

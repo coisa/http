@@ -20,7 +20,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Middleware
  */
-final class RequestHandlerMiddleware implements MiddlewareInterface
+final class RequestHandlerMiddleware implements RequestHandlerInterface, MiddlewareInterface
 {
     /**
      * @var RequestHandlerInterface
@@ -38,6 +38,16 @@ final class RequestHandlerMiddleware implements MiddlewareInterface
     }
 
     /**
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
+     */
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        return $this->handler->handle($request);
+    }
+
+    /**
      * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      *
@@ -45,7 +55,7 @@ final class RequestHandlerMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $response = $this->handler->handle($request);
+        $response = $this->handle($request);
         $handler->handle($request);
 
         return $response;
