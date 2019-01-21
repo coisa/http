@@ -16,7 +16,6 @@ use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -24,17 +23,12 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-final class PsrHttpClient implements ClientInterface
+class PsrHttpClient implements ClientInterface
 {
     /**
      * @var RequestHandlerInterface
      */
     private $handler;
-
-    /**
-     * @var null|MiddlewareInterface
-     */
-    private $middleware;
 
     /**
      * @var null|ServerRequestFactoryInterface
@@ -45,16 +39,13 @@ final class PsrHttpClient implements ClientInterface
      * Client constructor.
      *
      * @param RequestHandlerInterface            $handler
-     * @param null|MiddlewareInterface           $middleware
      * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
-        MiddlewareInterface $middleware = null,
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
         $this->handler              = $handler;
-        $this->middleware           = $middleware;
         $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
     }
 
@@ -73,10 +64,6 @@ final class PsrHttpClient implements ClientInterface
             );
         }
 
-        if (!$this->middleware) {
-            return $this->handler->handle($request);
-        }
-
-        return $this->middleware->process($request, $this->handler);
+        return $this->handler->handle($request);
     }
 }
