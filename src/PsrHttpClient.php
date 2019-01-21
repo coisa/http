@@ -23,7 +23,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-class PsrHttpClient implements ClientInterface
+final class PsrHttpClient implements ClientInterface
 {
     /**
      * @var RequestHandlerInterface
