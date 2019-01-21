@@ -32,7 +32,7 @@ final class EchoBodyMiddleware implements MiddlewareInterface
     {
         $response = $handler->handle($request);
 
-        print $response->getBody();
+        echo $response->getBody();
 
         return $response;
     }

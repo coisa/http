@@ -69,7 +69,7 @@ return PhpCsFixer\Config::create()
         'no_homoglyph_names' => true,
         'no_leading_import_slash' => true,
         'no_leading_namespace_whitespace' => true,
-        'no_mixed_echo_print' => ['use' => 'print'],
+        'no_mixed_echo_print' => ['use' => 'echo'],
         'no_null_property_initialization' => true,
         'no_short_bool_cast' => true,
         'no_short_echo_tag' => true,
