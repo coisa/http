@@ -10,6 +10,7 @@
 
 namespace CoiSA\Http\Handler;
 
+use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -20,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Handler
  */
-final class MiddlewareHandler implements RequestHandlerInterface
+final class MiddlewareHandler implements MiddlewareInterface, RequestHandlerInterface
 {
     /**
      * @var MiddlewareInterface
@@ -44,6 +45,22 @@ final class MiddlewareHandler implements RequestHandlerInterface
     ) {
         $this->middleware = $middleware;
         $this->handler    = $handler;
+    }
+
+    /**
+     * @param ServerRequestInterface  $request
+     * @param RequestHandlerInterface $handler
+     *
+     * @return ResponseInterface
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        $middlewareHandler = new MiddlewareHandler(
+            new RequestHandlerMiddleware($this),
+            $handler
+        );
+
+        return $middlewareHandler->handle($request);
     }
 
     /**

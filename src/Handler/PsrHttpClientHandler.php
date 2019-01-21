@@ -11,6 +11,7 @@
 namespace CoiSA\Http\Handler;
 
 use Psr\Http\Client\ClientInterface;
+use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,7 +21,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Handler
  */
-final class PsrHttpClientHandler implements RequestHandlerInterface
+final class PsrHttpClientHandler implements ClientInterface, RequestHandlerInterface
 {
     /**
      * @var ClientInterface
@@ -38,6 +39,17 @@ final class PsrHttpClientHandler implements RequestHandlerInterface
     }
 
     /**
+     * @param RequestInterface $request
+     *
+     * @return ResponseInterface
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        return $this->client->sendRequest($request);
+    }
+
+    /**
      * @param ServerRequestInterface $request
      *
      * @throws \Psr\Http\Client\ClientExceptionInterface
@@ -46,6 +58,6 @@ final class PsrHttpClientHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->client->sendRequest($request);
+        return $this->sendRequest($request);
     }
 }
