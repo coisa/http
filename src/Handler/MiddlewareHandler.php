@@ -36,14 +36,14 @@ final class MiddlewareHandler implements RequestHandlerInterface
      * MiddlewareHandler constructor.
      *
      * @param MiddlewareInterface     $middleware
-     * @param RequestHandlerInterface $defaultHandler
+     * @param RequestHandlerInterface $handler
      */
     public function __construct(
         MiddlewareInterface $middleware,
-        RequestHandlerInterface $defaultHandler
+        RequestHandlerInterface $handler
     ) {
         $this->middleware = $middleware;
-        $this->handler    = $defaultHandler;
+        $this->handler    = $handler;
     }
 
     /**
