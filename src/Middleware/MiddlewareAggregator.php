@@ -34,7 +34,7 @@ final class MiddlewareAggregator implements MiddlewareInterface
     private $current = 0;
 
     /**
-     * MiddlewareQueue constructor.
+     * MiddlewareAggregator constructor.
      *
      * @param MiddlewareInterface ...$middlewares
      */
