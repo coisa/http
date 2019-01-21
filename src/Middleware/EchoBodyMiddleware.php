@@ -23,7 +23,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class EchoBodyMiddleware implements MiddlewareInterface
 {
     /**
-     * @param ServerRequestInterface $request
+     * @param ServerRequestInterface  $request
      * @param RequestHandlerInterface $handler
      *
      * @return ResponseInterface
@@ -32,7 +32,7 @@ final class EchoBodyMiddleware implements MiddlewareInterface
     {
         $response = $handler->handle($request);
 
-        echo $response->getBody();
+        print $response->getBody();
 
         return $response;
     }
