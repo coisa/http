@@ -71,7 +71,7 @@ class Application implements ApplicationInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->sendRequest($request);
+        return $this->handler->handle($request);
     }
 
     /**
