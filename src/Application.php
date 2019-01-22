@@ -11,7 +11,7 @@
 namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
-use CoiSA\Http\Handler\PsrHttpClientHandler;
+use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -53,7 +53,9 @@ class Application implements ApplicationInterface
                 $middleware,
                 $handler
             ) :
-            $handler;
+            new RequestHandlerMiddleware(
+                $handler
+            );
 
         $this->client  = new PsrHttpClient($handler, $serverRequestFactory);
     }
