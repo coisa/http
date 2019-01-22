@@ -26,8 +26,8 @@ $handler = new HttpPlugHandler($curlClient);
 $application = new Application($handler, $middleware);
 
 $factory = new ServerRequestFactory();
-$respose = $application->sendRequest(
+$response = $application->sendRequest(
     $factory->createServerRequest('GET', 'http://google.com')
 );
 
-echo $respose->getBody();
+echo $response->getBody();
