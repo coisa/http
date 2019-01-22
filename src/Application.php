@@ -12,12 +12,11 @@ namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
 use CoiSA\Http\Handler\PsrHttpClientHandler;
-use CoiSA\Http\Middleware\EchoBodyMiddleware;
-use CoiSA\Http\Middleware\MiddlewareAggregator;
-use CoiSA\Http\Middleware\SendHeadersMiddleware;
-use Psr\Http\Client\ClientInterface;
+use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -27,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-class Application implements RequestHandlerInterface, MiddlewareInterface
+class Application implements ApplicationInterface
 {
     /**
      * @var RequestHandlerInterface
@@ -35,31 +34,53 @@ class Application implements RequestHandlerInterface, MiddlewareInterface
     private $handler;
 
     /**
+     * @var ServerRequestFactoryInterface
+     */
+    private $serverRequestFactory;
+
+    /**
+     * @var ResponseFactoryInterface
+     */
+    private $responseFactory;
+
+    /**
      * Application constructor.
      *
-     * @param PsrHttpClientHandler $handler
-     * @param MiddlewareAggregator $middlewares
+     * @param RequestHandlerInterface            $handler
+     * @param null|MiddlewareInterface           $middleware
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
+     * @param null|ResponseFactoryInterface      $responseFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
-        MiddlewareInterface $middleware = null
+        MiddlewareInterface $middleware = null,
+        ServerRequestFactoryInterface $serverRequestFactory = null,
+        ResponseFactoryInterface $responseFactory = null
     ) {
-        $middleware = new MiddlewareAggregator(
-            new SendHeadersMiddleware(),
-            new EchoBodyMiddleware(),
-            $middleware
-        );
+        $client  = new PsrHttpClient($handler, $serverRequestFactory);
+        $handler = new PsrHttpClientHandler($client);
 
-        $this->handler = new MiddlewareHandler(
-            $middleware,
-            $handler
-        );
+        $this->handler = $middleware ?
+            new MiddlewareHandler(
+                $middleware,
+                $handler
+            )
+            : $handler;
+
+        $this->serverRequestFactory = $serverRequestFactory ?: new Psr17Factory();
+        $this->responseFactory      = $responseFactory ?: new Psr17Factory();
     }
 
     /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
+     */
+    public function sendRequest(RequestInterface $request): ResponseInterface
+    {
+        return $this->handler->sendRequest($request);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -67,13 +88,26 @@ class Application implements RequestHandlerInterface, MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         return $this->handler->process($request, $handler);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createServerRequest(string $method, $uri, array $serverParams = []): ServerRequestInterface
+    {
+        return $this->serverRequestFactory->createServerRequest($method, $uri, $serverParams);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createResponse(int $code = 200, string $reasonPhrase = ''): ResponseInterface
+    {
+        return $this->responseFactory->createResponse($code, $reasonPhrase);
     }
 }
