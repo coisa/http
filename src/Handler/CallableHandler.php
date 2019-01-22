@@ -27,7 +27,9 @@ class CallableHandler implements RequestHandlerInterface
     private $callback;
 
     /**
-     * @param callable $callback function (ServerRequestInterface $request) : ResponseInterface
+     * CallableHandler constructor.
+     *
+     * @param callable $callback
      */
     public function __construct(callable $callback)
     {
@@ -35,9 +37,7 @@ class CallableHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

@@ -48,14 +48,11 @@ final class MiddlewareHandler implements MiddlewareInterface, RequestHandlerInte
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $middlewareHandler = new MiddlewareHandler(
+        $middlewareHandler = new self(
             new RequestHandlerMiddleware($this),
             $handler
         );
@@ -64,9 +61,7 @@ final class MiddlewareHandler implements MiddlewareInterface, RequestHandlerInte
     }
 
     /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {

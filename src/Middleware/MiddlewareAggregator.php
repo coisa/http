@@ -39,22 +39,19 @@ final class MiddlewareAggregator implements MiddlewareInterface
     }
 
     /**
-     * @param ServerRequestInterface  $request
-     * @param RequestHandlerInterface $handler
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $middleware = current($this->middlewares);
+        $middleware = \current($this->middlewares);
 
         if (!$middleware) {
-            reset($this->middlewares);
+            \reset($this->middlewares);
 
             return $handler->handle($request);
         }
 
-        next($this->middlewares);
+        \next($this->middlewares);
 
         $requestHandler = new MiddlewareHandler(
             $this,

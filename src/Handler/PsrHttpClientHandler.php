@@ -41,8 +41,9 @@ final class PsrHttpClientHandler implements ClientInterface, RequestHandlerInter
     /**
      * @param RequestInterface $request
      *
-     * @return ResponseInterface
      * @throws \Psr\Http\Client\ClientExceptionInterface
+     *
+     * @return ResponseInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
