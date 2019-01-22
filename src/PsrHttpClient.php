@@ -10,7 +10,7 @@
 
 namespace CoiSA\Http;
 
-use Nyholm\Psr7\Factory\Psr17Factory;
+use CoiSA\Http\Handler\ServerRequestFactory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -46,7 +46,7 @@ final class PsrHttpClient implements ClientInterface
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
         $this->handler              = $defaultHandler;
-        $this->serverRequestFactory = $serverRequestFactory ?? new Psr17Factory();
+        $this->serverRequestFactory = $serverRequestFactory ?? new ServerRequestFactory();
     }
 
     /**

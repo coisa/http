@@ -11,8 +11,6 @@
 namespace CoiSA\Http;
 
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\ResponseFactoryInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -21,6 +19,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-interface ApplicationInterface extends ClientInterface, MiddlewareInterface, RequestHandlerInterface, ServerRequestFactoryInterface, ResponseFactoryInterface
+interface ApplicationInterface extends ClientInterface, MiddlewareInterface, RequestHandlerInterface
 {
 }
