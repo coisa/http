@@ -10,7 +10,7 @@
 
 namespace CoiSA\Http;
 
-use CoiSA\Http\Handler\ServerRequestFactory;
+use CoiSA\Http\Message\ServerRequestFactory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;

@@ -12,7 +12,6 @@ namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
 use CoiSA\Http\Handler\PsrHttpClientHandler;
-use CoiSA\Http\Handler\ServerRequestFactory;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -33,28 +32,30 @@ class Application implements ApplicationInterface
     private $handler;
 
     /**
+     * @var PsrHttpClient
+     */
+    private $client;
+
+    /**
      * Application constructor.
      *
-     * @param RequestHandlerInterface            $handler
-     * @param null|MiddlewareInterface           $middleware
-     * @param null|ServerRequestFactoryInterface $serverRequestFactory
+     * @param RequestHandlerInterface $handler
+     * @param MiddlewareInterface|null $middleware
+     * @param ServerRequestFactoryInterface|null $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
         MiddlewareInterface $middleware = null,
         ServerRequestFactoryInterface $serverRequestFactory = null
     ) {
-        $client  = new PsrHttpClient($handler, $serverRequestFactory);
-        $handler = new PsrHttpClientHandler($client);
-
-        if ($middleware) {
-            $handler = new MiddlewareHandler(
+        $this->handler = $middleware ?
+            new MiddlewareHandler(
                 $middleware,
                 $handler
-            );
-        }
+            ) :
+            $handler;
 
-        $this->handler = $handler;
+        $this->client  = new PsrHttpClient($handler, $serverRequestFactory);
     }
 
     /**
@@ -62,7 +63,7 @@ class Application implements ApplicationInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        return $this->handler->sendRequest($request);
+        return $this->client->sendRequest($request);
     }
 
     /**
@@ -70,7 +71,7 @@ class Application implements ApplicationInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->handler->handle($request);
+        return $this->sendRequest($request);
     }
 
     /**

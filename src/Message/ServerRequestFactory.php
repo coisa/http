@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http\Handler;
+namespace CoiSA\Http\Message;
 
 use Psr\Http\Message\ServerRequestFactoryInterface;
 
