@@ -29,6 +29,8 @@ final class SendHeadersMiddleware implements MiddlewareInterface
     {
         $response = $handler->handle($request);
 
+        \header_remove();
+
         foreach ($response->getHeaders() as $header => $values) {
             $name = $this->normalize($header);
 

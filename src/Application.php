@@ -39,9 +39,9 @@ class Application implements ApplicationInterface
     /**
      * Application constructor.
      *
-     * @param RequestHandlerInterface $handler
-     * @param MiddlewareInterface|null $middleware
-     * @param ServerRequestFactoryInterface|null $serverRequestFactory
+     * @param RequestHandlerInterface            $handler
+     * @param null|MiddlewareInterface           $middleware
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
@@ -57,7 +57,10 @@ class Application implements ApplicationInterface
                 $handler
             );
 
-        $this->client  = new PsrHttpClient($handler, $serverRequestFactory);
+        $this->client  = new PsrHttpClient(
+            $this->handler,
+            $serverRequestFactory
+        );
     }
 
     /**

@@ -28,8 +28,7 @@ final class EchoBodyMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-
-        echo $response->getBody();
+        echo $response->getBody()->getContents();
 
         return $response;
     }
