@@ -57,12 +57,14 @@ final class Router implements RouterInterface
      */
     public function match(RequestInterface $request): RouteMatchInterface
     {
-        if (isset($this->routes[$request->getMethod()])) {
-            foreach ($this->routes[$request->getMethod()] as $regex => $requestHandler) {
-                if (preg_match($regex, $request->getRequestTarget(), $matches)) {
-                    return new RouteMatch($requestHandler, $matches);
-                }
+        $routes = $this->routes[$request->getMethod()] ?? [];
+
+        foreach ($routes as $regex => $requestHandler) {
+            if (!preg_match($regex, $request->getRequestTarget(), $matches)) {
+                continue;
             }
+
+            return new RouteMatch($requestHandler, $matches);
         }
 
         return new RouteMatch($this->notFoundHandler);
