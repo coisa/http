@@ -44,7 +44,7 @@ final class MediaTypeFilter implements FilterInterface
     {
         $filtered = [];
 
-        foreach ($filtered as $uploadedFile) {
+        foreach ($uploadedFiles as $uploadedFile) {
             $mediaType = $uploadedFile->getClientMediaType();
 
             if ($mediaType === $this->mediaType) {

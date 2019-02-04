@@ -44,7 +44,7 @@ final class ExtensionFilter implements FilterInterface
     {
         $filtered = [];
 
-        foreach ($filtered as $uploadedFile) {
+        foreach ($uploadedFiles as $uploadedFile) {
             $extension = pathinfo(
                 $uploadedFile->getClientFilename(),
                 PATHINFO_EXTENSION
