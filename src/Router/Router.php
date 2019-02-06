@@ -41,8 +41,8 @@ final class Router implements RouterInterface
     }
 
     /**
-     * @param string $method
-     * @param string $regex
+     * @param string                  $method
+     * @param string                  $regex
      * @param RequestHandlerInterface $requestHandler
      */
     public function addRoute(string $method, string $regex, RequestHandlerInterface $requestHandler): void
@@ -60,7 +60,7 @@ final class Router implements RouterInterface
         $routes = $this->routes[$request->getMethod()] ?? [];
 
         foreach ($routes as $regex => $requestHandler) {
-            if (!preg_match($regex, $request->getRequestTarget(), $matches)) {
+            if (!\preg_match($regex, $request->getRequestTarget(), $matches)) {
                 continue;
             }
 

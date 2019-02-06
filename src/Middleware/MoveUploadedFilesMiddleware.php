@@ -30,20 +30,20 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
     private $targetPath;
 
     /**
-     * @var FilterInterface|null
+     * @var null|FilterInterface
      */
     private $filter;
 
     /**
      * MoveUploadedFilesMiddleware constructor.
      *
-     * @param string $targetPath
-     * @param FilterInterface|null $filter
+     * @param string               $targetPath
+     * @param null|FilterInterface $filter
      */
     public function __construct(string $targetPath, FilterInterface $filter = null)
     {
         $this->targetPath = $targetPath;
-        $this->filter = $filter;
+        $this->filter     = $filter;
     }
 
     /**

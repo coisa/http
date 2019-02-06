@@ -47,8 +47,8 @@ final class JsonpCallbackMiddleware implements MiddlewareInterface
     /**
      * JsonpCallbackMiddleware constructor.
      *
-     * @param string $queryParam
-     * @param StreamFactoryInterface|null $streamFactory
+     * @param string                      $queryParam
+     * @param null|StreamFactoryInterface $streamFactory
      */
     public function __construct(string $queryParam = self::REQUEST_QUERY_PARAM, StreamFactoryInterface $streamFactory = null)
     {
@@ -69,7 +69,7 @@ final class JsonpCallbackMiddleware implements MiddlewareInterface
         }
 
         if ($request->hasHeader('Accept')
-            && !in_array(self::REQUEST_ACCEPT_HEADER, $request->getHeader('Accept'))
+            && !\in_array(self::REQUEST_ACCEPT_HEADER, $request->getHeader('Accept'))
         ) {
             return $response;
         }
@@ -77,7 +77,7 @@ final class JsonpCallbackMiddleware implements MiddlewareInterface
         // @TODO accept all types of json content-type ['application/json', 'text/json', 'application/x-json'];
 
         if ($response->hasHeader('Content-Type')
-            && !in_array('application/json', $response->getHeader('Content-Type'))
+            && !\in_array('application/json', $response->getHeader('Content-Type'))
         ) {
             return $response;
         }

@@ -27,7 +27,7 @@ final class SendHeadersMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        ob_start();
+        \ob_start();
         $response = $handler->handle($request);
 
         foreach ($response->getHeaders() as $header => $values) {

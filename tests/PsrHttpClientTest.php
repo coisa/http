@@ -23,31 +23,31 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class PsrHttpClientTest extends TestCase
 {
-    /** @var RequestHandlerInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestHandlerInterface */
     private $requestHandler;
 
-    /** @var ServerRequestFactoryInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestFactoryInterface */
     private $serverRequestFactory;
 
-    /** @var RequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestInterface */
     private $request;
 
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestInterface */
     private $serverRequest;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
     public function setUp(): void
     {
-        $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
+        $this->requestHandler       = $this->prophesize(RequestHandlerInterface::class);
         $this->serverRequestFactory = $this->prophesize(ServerRequestFactoryInterface::class);
-        $this->request = $this->prophesize(RequestInterface::class);
-        $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
+        $this->request              = $this->prophesize(RequestInterface::class);
+        $this->serverRequest        = $this->prophesize(ServerRequestInterface::class);
+        $this->response             = $this->prophesize(ResponseInterface::class);
 
         $method = 'GET';
-        $uri = 'http://google.com';
+        $uri    = 'http://google.com';
 
         $this->request->getMethod()->willReturn($method);
         $this->request->getUri()->willReturn($uri);
@@ -58,35 +58,35 @@ final class PsrHttpClientTest extends TestCase
         $this->requestHandler->handle($this->serverRequest->reveal())->will([$this->response, 'reveal']);
     }
 
-    public function testImplementClientInterface()
+    public function testImplementClientInterface(): void
     {
         $client = new PsrHttpClient($this->requestHandler->reveal());
         $this->assertInstanceOf(ClientInterface::class, $client);
     }
 
-    public function testConstructorWithoutServerRequestFactory()
+    public function testConstructorWithoutServerRequestFactory(): void
     {
         $client = new PsrHttpClient($this->requestHandler->reveal());
         $this->assertInstanceOf(PsrHttpClient::class, $client);
     }
 
-    public function testConstructorWithServerRequestFactory()
+    public function testConstructorWithServerRequestFactory(): void
     {
         $client = new PsrHttpClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
         $this->assertInstanceOf(PsrHttpClient::class, $client);
     }
 
-    public function testSendServerRequestReturnResponse()
+    public function testSendServerRequestReturnResponse(): void
     {
-        $client = new PsrHttpClient($this->requestHandler->reveal());
+        $client   = new PsrHttpClient($this->requestHandler->reveal());
         $response = $client->sendRequest($this->serverRequest->reveal());
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function testSendRequestReturnResponse()
+    public function testSendRequestReturnResponse(): void
     {
-        $client = new PsrHttpClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
+        $client   = new PsrHttpClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
         $response = $client->sendRequest($this->request->reveal());
 
         $this->assertInstanceOf(ResponseInterface::class, $response);

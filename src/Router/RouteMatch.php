@@ -25,7 +25,7 @@ final class RouteMatch implements RouteMatchInterface
     private $handler;
 
     /**
-     * @var array|null
+     * @var null|array
      */
     private $matches;
 
@@ -61,6 +61,6 @@ final class RouteMatch implements RouteMatchInterface
      */
     public function getVariables(): array
     {
-        return is_array($this->matches) ? $this->matches : [];
+        return \is_array($this->matches) ? $this->matches : [];
     }
 }

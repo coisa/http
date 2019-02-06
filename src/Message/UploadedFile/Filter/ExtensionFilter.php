@@ -32,7 +32,7 @@ final class ExtensionFilter implements FilterInterface
      */
     public function __construct(string $extension)
     {
-        $this->extension = ltrim('.', $extension);
+        $this->extension = \ltrim('.', $extension);
     }
 
     /**
@@ -45,7 +45,7 @@ final class ExtensionFilter implements FilterInterface
         $filtered = [];
 
         foreach ($uploadedFiles as $uploadedFile) {
-            $extension = pathinfo(
+            $extension = \pathinfo(
                 $uploadedFile->getClientFilename(),
                 PATHINFO_EXTENSION
             );

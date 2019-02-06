@@ -19,26 +19,27 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 final class CallableHandlerTest extends TestCase
 {
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestInterface */
     private $serverRequest;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
     public function setUp(): void
     {
         $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
+        $this->response      = $this->prophesize(ResponseInterface::class);
     }
 
-    public function testInvalidCallbackThrowsTypeError()
+    public function testInvalidCallbackThrowsTypeError(): void
     {
-        $handler = new CallableHandler(function(){});
+        $handler = new CallableHandler(function (): void {
+        });
         $this->expectException(TypeError::class);
         $handler->handle($this->serverRequest->reveal());
     }
 
-    public function testHandleReturnsCallbackResponse()
+    public function testHandleReturnsCallbackResponse(): void
     {
         $response = $this->response;
         $callback = function () use ($response) {

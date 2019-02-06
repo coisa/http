@@ -25,13 +25,13 @@ final class PsrHttpClientHandlerTest extends TestCase
     /** @var ClientInterface|ObjectProphecy */
     private $client;
 
-    /** @var RequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestInterface */
     private $request;
 
-    /** @var ServerRequestInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestInterface */
     private $serverRequest;
 
-    /** @var ResponseInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
     /** @var PsrHttpClientHandler */
@@ -39,33 +39,33 @@ final class PsrHttpClientHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->client = $this->prophesize(ClientInterface::class);
-        $this->request = $this->prophesize(RequestInterface::class);
+        $this->client        = $this->prophesize(ClientInterface::class);
+        $this->request       = $this->prophesize(RequestInterface::class);
         $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
-        $this->response = $this->prophesize(ResponseInterface::class);
-        $this->handler = new PsrHttpClientHandler($this->client->reveal());
+        $this->response      = $this->prophesize(ResponseInterface::class);
+        $this->handler       = new PsrHttpClientHandler($this->client->reveal());
 
         $this->client->sendRequest($this->request->reveal())->will([$this->response, 'reveal']);
         $this->client->sendRequest($this->serverRequest->reveal())->will([$this->response, 'reveal']);
     }
 
-    public function testHandlerImplementInterfaces()
+    public function testHandlerImplementInterfaces(): void
     {
         $this->assertInstanceOf(ClientInterface::class, $this->handler);
         $this->assertInstanceOf(RequestHandlerInterface::class, $this->handler);
     }
 
-    public function testHandleReturnResponseFromClient()
+    public function testHandleReturnResponseFromClient(): void
     {
         $response = $this->handler->handle($this->serverRequest->reveal());
-        $client = $this->client->reveal();
+        $client   = $this->client->reveal();
         $this->assertEquals($client->sendRequest($this->serverRequest->reveal()), $response);
     }
 
-    public function testSendRequestReturnResponseFromClient()
+    public function testSendRequestReturnResponseFromClient(): void
     {
         $response = $this->handler->sendRequest($this->request->reveal());
-        $client = $this->client->reveal();
+        $client   = $this->client->reveal();
         $this->assertEquals($client->sendRequest($this->request->reveal()), $response);
 
         $response = $this->handler->sendRequest($this->serverRequest->reveal());
