@@ -31,7 +31,7 @@ final class PsrHttpClient implements ClientInterface
     private $handler;
 
     /**
-     * @var null|ServerRequestFactoryInterface
+     * @var ServerRequestFactoryInterface
      */
     private $serverRequestFactory;
 
