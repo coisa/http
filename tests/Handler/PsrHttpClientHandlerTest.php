@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace CoiSA\Http\Test;
+
 use CoiSA\Http\Handler\PsrHttpClientHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -19,6 +21,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class PsrHttpClientHandlerTest
+ *
+ * @package CoiSA\Http\Test
  */
 final class PsrHttpClientHandlerTest extends TestCase
 {

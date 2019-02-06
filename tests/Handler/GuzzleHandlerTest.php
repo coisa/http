@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace CoiSA\Http\Test;
+
 use CoiSA\Http\Handler\GuzzleHandler;
 use GuzzleHttp\ClientInterface;
 use PHPUnit\Framework\TestCase;
@@ -18,6 +20,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class GuzzleHandlerTest
+ *
+ * @package CoiSA\Http\Test
  */
 final class GuzzleHandlerTest extends TestCase
 {

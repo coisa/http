@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace CoiSA\Http\Test;
+
 use CoiSA\Http\Handler\CallableHandler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -16,6 +18,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class CallableHandlerTest
+ *
+ * @package CoiSA\Http\Test
  */
 final class CallableHandlerTest extends TestCase
 {

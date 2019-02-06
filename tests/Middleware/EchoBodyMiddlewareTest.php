@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace CoiSA\Http\Test;
+
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -19,6 +21,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class EchoBodyMiddlewareTest
+ *
+ * @package CoiSA\Http\Test
  */
 final class EchoBodyMiddlewareTest extends TestCase
 {

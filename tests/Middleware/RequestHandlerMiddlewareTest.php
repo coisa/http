@@ -8,6 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
+namespace CoiSA\Http\Test;
+
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use PHPUnit\Framework\TestCase;
@@ -19,6 +21,8 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class RequestHandlerMiddlewareTest
+ *
+ * @package CoiSA\Http\Test
  */
 final class RequestHandlerMiddlewareTest extends TestCase
 {
@@ -50,8 +54,9 @@ final class RequestHandlerMiddlewareTest extends TestCase
         $this->middleware     = new RequestHandlerMiddleware($this->requestHandler->reveal());
 
         $testClass = $this;
-        $callback = function () use ($testClass) {
-            $testClass->execution[] = spl_object_hash($this);
+        $callback  = function () use ($testClass) {
+            $testClass->execution[] = \spl_object_hash($this);
+
             return $testClass->response->reveal();
         };
 
@@ -65,28 +70,28 @@ final class RequestHandlerMiddlewareTest extends TestCase
         $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
     }
 
-    public function testHandleReturnHandlerResponse()
+    public function testHandleReturnHandlerResponse(): void
     {
-        $serverRequest = $this->serverRequest->reveal();
-        $response = $this->middleware->handle($serverRequest);
+        $serverRequest  = $this->serverRequest->reveal();
+        $response       = $this->middleware->handle($serverRequest);
         $requestHandler = $this->requestHandler->reveal();
         $this->assertEquals($requestHandler->handle($serverRequest), $response);
     }
 
-    public function testProcessExecuteBothHandlersInOrder()
+    public function testProcessExecuteBothHandlersInOrder(): void
     {
         $expected = [
-            spl_object_hash($this->requestHandler),
-            spl_object_hash($this->next),
+            \spl_object_hash($this->requestHandler),
+            \spl_object_hash($this->next),
         ];
         $this->middleware->process($this->serverRequest->reveal(), $this->next->reveal());
         $this->assertEquals($expected, $this->execution);
     }
 
-    public function testProcessReturnResponseFromDependencyHandler()
+    public function testProcessReturnResponseFromDependencyHandler(): void
     {
-        $serverRequest = $this->serverRequest->reveal();
-        $response = $this->middleware->process($serverRequest, $this->next->reveal());
+        $serverRequest  = $this->serverRequest->reveal();
+        $response       = $this->middleware->process($serverRequest, $this->next->reveal());
         $requestHandler = $this->requestHandler->reveal();
         $this->assertEquals($requestHandler->handle($serverRequest), $response);
     }
