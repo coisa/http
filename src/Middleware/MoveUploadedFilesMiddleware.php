@@ -30,7 +30,7 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
     private $targetPath;
 
     /**
-     * @var callable
+     * @var FilterInterface|null
      */
     private $filter;
 

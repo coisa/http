@@ -38,7 +38,7 @@ final class FilterAggregator implements FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return FilterInterface[]
+     * @return UploadedFileInterface[]
      */
     public function filter(UploadedFileInterface ...$uploadedFiles): array
     {
