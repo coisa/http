@@ -9,7 +9,6 @@
  */
 
 use CoiSA\Http\Handler\GuzzleHandler;
-use CoiSA\Http\Handler\HttpPlugHandler;
 use GuzzleHttp\ClientInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -31,7 +30,7 @@ final class GuzzleHandlerTest extends TestCase
     /** @var ObjectProphecy|ResponseInterface */
     private $response;
 
-    /** @var HttpPlugHandler */
+    /** @var GuzzleHandler */
     private $handler;
 
     public function setUp(): void
