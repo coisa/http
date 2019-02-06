@@ -21,7 +21,7 @@ use Psr\Http\Message\UploadedFileInterface;
 final class FilterAggregator implements FilterInterface
 {
     /**
-     * @var string
+     * @var FilterInterface[]
      */
     private $filters;
 
@@ -38,7 +38,7 @@ final class FilterAggregator implements FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return array
+     * @return FilterInterface[]
      */
     public function filter(UploadedFileInterface ...$uploadedFiles): array
     {

@@ -38,7 +38,7 @@ final class MediaTypeFilter implements FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return array
+     * @return FilterInterface[]
      */
     public function filter(UploadedFileInterface ...$uploadedFiles): array
     {
