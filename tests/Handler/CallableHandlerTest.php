@@ -15,7 +15,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class EchoBodyMiddlewareTest
+ * Class CallableHandlerTest
  */
 final class CallableHandlerTest extends TestCase
 {

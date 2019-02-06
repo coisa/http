@@ -19,7 +19,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * @author Felipe Sayão Lobato Abreu <contato@felipeabreu.com.br>
+ * Class PsrHttpClientTest
  */
 final class PsrHttpClientTest extends TestCase
 {
