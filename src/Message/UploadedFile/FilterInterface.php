@@ -22,7 +22,7 @@ interface FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return FilterInterface[]
+     * @return UploadedFileInterface[]
      */
     public function filter(UploadedFileInterface ...$uploadedFiles): array;
 }
