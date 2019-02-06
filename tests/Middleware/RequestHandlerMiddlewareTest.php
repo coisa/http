@@ -26,7 +26,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class RequestHandlerMiddlewareTest extends TestCase
 {
-    /** @var EchoBodyMiddleware */
+    /** @var RequestHandlerMiddleware */
     private $middleware;
 
     /** @var ObjectProphecy|RequestHandlerInterface */
