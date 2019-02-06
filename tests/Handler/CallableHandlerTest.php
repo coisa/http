@@ -39,7 +39,7 @@ final class CallableHandlerTest extends TestCase
     {
         $handler = new CallableHandler(function (): void {
         });
-        $this->expectException(TypeError::class);
+        $this->expectException(\TypeError::class);
         $handler->handle($this->serverRequest->reveal());
     }
 
