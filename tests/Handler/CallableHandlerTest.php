@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http\Test;
+namespace CoiSA\Http\Test\Handler;
 
 use CoiSA\Http\Handler\CallableHandler;
 use PHPUnit\Framework\TestCase;

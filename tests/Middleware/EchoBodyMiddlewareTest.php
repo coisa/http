@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http\Test;
+namespace CoiSA\Http\Test\Middleware;
 
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use PHPUnit\Framework\TestCase;

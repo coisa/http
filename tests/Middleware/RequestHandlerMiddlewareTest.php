@@ -8,9 +8,8 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http\Test;
+namespace CoiSA\Http\Test\Middleware;
 
-use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
