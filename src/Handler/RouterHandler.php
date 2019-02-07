@@ -10,8 +10,8 @@
 
 namespace CoiSA\Http\Handler;
 
-use CoiSA\Http\Middleware\RequestMethodMiddleware;
 use CoiSA\Http\Middleware\PregMatchRequestTargetMiddleware;
+use CoiSA\Http\Middleware\RequestMethodMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -56,12 +56,11 @@ final class RouterHandler implements RequestHandlerInterface
             $regex,
             new MiddlewareHandler($middleware, $this)
         );
+        \reset($this->routes);
     }
 
     /**
      * @param ServerRequestInterface $request
-     *
-     * @throws \Psr\Http\Client\ClientExceptionInterface
      *
      * @return ResponseInterface
      */
