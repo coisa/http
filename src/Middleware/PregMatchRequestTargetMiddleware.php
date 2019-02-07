@@ -10,32 +10,38 @@
 
 namespace CoiSA\Http\Middleware;
 
-use CoiSA\Http\RouterInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class RoutingMiddleware
+ * Class PregMatchRequestTargetMiddleware
  *
  * @package CoiSA\Http\Middleware
  */
-final class RoutingMiddleware implements MiddlewareInterface
+final class PregMatchRequestTargetMiddleware implements MiddlewareInterface
 {
     /**
-     * @var RouterInterface
+     * @var string
      */
-    private $router;
+    private $pattern;
 
     /**
-     * RoutingMiddleware constructor.
-     *
-     * @param RouterInterface $router
+     * @var RequestHandlerInterface
      */
-    public function __construct(RouterInterface $router)
+    private $handler;
+
+    /**
+     * PregMatchRequestTargetMiddleware constructor.
+     *
+     * @param string                  $pattern
+     * @param RequestHandlerInterface $handler
+     */
+    public function __construct(string $pattern, RequestHandlerInterface $handler)
     {
-        $this->router = $router;
+        $this->pattern = '(' . $pattern . ')i';
+        $this->handler = $handler;
     }
 
     /**
@@ -46,16 +52,10 @@ final class RoutingMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $routeMatch = $this->router->match($request);
-
-        if ($routeMatch->isSuccess()) {
-            foreach ($routeMatch->getVariables() as $name => $value) {
-                $request = $request->withAttribute($name, $value);
-            }
-
-            return $routeMatch->getHandler()->handle($request);
+        if (!\preg_match($this->pattern, $request->getRequestTarget(), $matches)) {
+            return $handler->handle($request);
         }
 
-        return $handler->handle($request);
+        return $this->handler->handle($request->withAttribute(self::class, $matches));
     }
 }
