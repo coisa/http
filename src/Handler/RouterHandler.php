@@ -33,7 +33,7 @@ final class RouterHandler implements RequestHandlerInterface
     /**
      * @var MiddlewareInterface[]
      */
-    private $routes;
+    private $routes = [];
 
     /**
      * RouterHandler constructor.
