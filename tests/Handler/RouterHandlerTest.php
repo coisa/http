@@ -73,7 +73,7 @@ final class RouterHandlerTest extends TestCase
     {
         $this->handler->addRoute(
             RequestMethodInterface::METHOD_GET,
-            uniqid('test', true),
+            \uniqid('test', true),
             $this->routeHandler->reveal()
         );
 
@@ -83,8 +83,7 @@ final class RouterHandlerTest extends TestCase
 
     public function testMatchedRouteReturnNewResponse(): void
     {
-        // @FIXME add tests
-        $this->markTestSkipped();
+        $this->markTestIncomplete();
 
         $notFoundResponse = $this->response->reveal();
 

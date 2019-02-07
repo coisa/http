@@ -46,18 +46,20 @@ final class StatusCodeHandlerTest extends TestCase
     public function testInvalidStatusThrowsUnexpectedValueException(): void
     {
         $this->expectException(\UnexpectedValueException::class);
-        new StatusCodeHandler($this->handler->reveal(), rand(600, 700));
+        new StatusCodeHandler($this->handler->reveal(), \rand(600, 700));
     }
 
     /**
      * @dataProvider provideStatusCodes
+     *
+     * @param int $statusCode
      */
-    public function testResponseHaveSameGivenStatusCode($statusCode)
+    public function testResponseHaveSameGivenStatusCode($statusCode): void
     {
         $this->response->withStatus($statusCode)->will([$this->response, 'reveal']);
         $this->response->getStatusCode()->willReturn($statusCode);
 
-        $handler = new StatusCodeHandler($this->handler->reveal(), $statusCode);
+        $handler  = new StatusCodeHandler($this->handler->reveal(), $statusCode);
         $response = $handler->handle($this->serverRequest->reveal());
 
         $this->assertEquals($statusCode, $response->getStatusCode());
@@ -68,6 +70,6 @@ final class StatusCodeHandlerTest extends TestCase
         $reflection    = new \ReflectionClass(StatusCodeInterface::class);
         $allowedStatus = $reflection->getConstants();
 
-        return array_chunk($allowedStatus, 1);
+        return \array_chunk($allowedStatus, 1);
     }
 }
