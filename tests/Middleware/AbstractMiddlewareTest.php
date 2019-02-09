@@ -58,11 +58,14 @@ abstract class AbstractMiddlewareTest extends TestCase
         $this->nextResponse->withStatus(Argument::type('int'))->will([$this->nextResponse, 'reveal']);
     }
 
+    public function testImplementsPsrServerMiddleware(): void
+    {
+        $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
+    }
+
     public function testProcessMethodReturnResponse(): void
     {
         $response = $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
-
         $this->assertInstanceOf(ResponseInterface::class, $response);
-        $this->assertSame($this->response->reveal(), $response);
     }
 }

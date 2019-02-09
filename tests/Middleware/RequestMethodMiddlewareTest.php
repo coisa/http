@@ -30,19 +30,19 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
         );
     }
 
-    public function testInvalidMethodThrowException()
+    public function testInvalidMethodThrowException(): void
     {
         $this->expectException(\UnexpectedValueException::class);
 
         new RequestMethodMiddleware(
-            uniqid('test', false),
+            \uniqid('test', false),
             $this->handler->reveal()
         );
     }
 
     public function provideMethods()
     {
-        $reflection    = new \ReflectionClass(RequestMethodInterface::class);
+        $reflection     = new \ReflectionClass(RequestMethodInterface::class);
         $allowedMethods = $reflection->getConstants();
 
         return \array_chunk($allowedMethods, 1);
@@ -53,7 +53,7 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
      *
      * @param string $method
      */
-    public function testGivenMethodReturnHandlerResponse(string $method)
+    public function testGivenMethodReturnHandlerResponse(string $method): void
     {
         $this->serverRequest->getMethod()->willReturn($method);
 
@@ -72,7 +72,7 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
      *
      * @param string $method
      */
-    public function testDiffMethodReturnNextResponse(string $method)
+    public function testDiffMethodReturnNextResponse(string $method): void
     {
         $this->serverRequest->getMethod()->willReturn(
             $method === RequestMethodInterface::METHOD_GET ?

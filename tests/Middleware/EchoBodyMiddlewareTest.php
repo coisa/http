@@ -13,9 +13,7 @@ namespace CoiSA\Http\Test\Middleware;
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Server\MiddlewareInterface;
 
 /**
  * Class EchoBodyMiddlewareTest
@@ -50,17 +48,6 @@ final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
         while (\ob_get_level() > 1) {
             \ob_end_clean();
         }
-    }
-
-    public function testImplementsPsrServerMiddleware(): void
-    {
-        $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
-    }
-
-    public function testProcessReturnResponse(): void
-    {
-        $response = $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
-        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     public function testProcessEchoResponseBodyContent(): void

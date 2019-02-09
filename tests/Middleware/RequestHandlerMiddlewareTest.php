@@ -12,8 +12,6 @@ namespace CoiSA\Http\Test\Middleware;
 
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -23,9 +21,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 final class RequestHandlerMiddlewareTest extends AbstractMiddlewareTest
 {
-    /** @var ObjectProphecy|RequestHandlerInterface */
-    private $next;
-
     /** @var array */
     private $execution = [];
 
@@ -35,23 +30,22 @@ final class RequestHandlerMiddlewareTest extends AbstractMiddlewareTest
 
         $this->middleware = new RequestHandlerMiddleware($this->handler->reveal());
 
-        $this->next       = $this->prophesize(RequestHandlerInterface::class);
-
         $testClass = $this;
-        $callback  = function () use ($testClass) {
+        $this->handler->handle($this->serverRequest->reveal())->will(function () use ($testClass) {
             $testClass->execution[] = \spl_object_hash($this);
 
             return $testClass->response->reveal();
-        };
+        });
+        $this->nextHandler->handle($this->serverRequest->reveal())->will(function () use ($testClass) {
+            $testClass->execution[] = \spl_object_hash($this);
 
-        $this->handler->handle($this->serverRequest->reveal())->will($callback);
-        $this->next->handle($this->serverRequest->reveal())->will($callback);
+            return $testClass->nextResponse->reveal();
+        });
     }
 
-    public function testImplementPsrInterfaces(): void
+    public function testImplementPsrServerRequestHandler(): void
     {
         $this->assertInstanceOf(RequestHandlerInterface::class, $this->middleware);
-        $this->assertInstanceOf(MiddlewareInterface::class, $this->middleware);
     }
 
     public function testHandleReturnHandlerResponse(): void
@@ -66,16 +60,16 @@ final class RequestHandlerMiddlewareTest extends AbstractMiddlewareTest
     {
         $expected = [
             \spl_object_hash($this->handler),
-            \spl_object_hash($this->next),
+            \spl_object_hash($this->nextHandler),
         ];
-        $this->middleware->process($this->serverRequest->reveal(), $this->next->reveal());
+        $this->middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
         $this->assertEquals($expected, $this->execution);
     }
 
     public function testProcessReturnResponseFromDependencyHandler(): void
     {
         $serverRequest  = $this->serverRequest->reveal();
-        $response       = $this->middleware->process($serverRequest, $this->next->reveal());
+        $response       = $this->middleware->process($serverRequest, $this->nextHandler->reveal());
         $requestHandler = $this->handler->reveal();
         $this->assertEquals($requestHandler->handle($serverRequest), $response);
     }

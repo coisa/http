@@ -13,8 +13,6 @@ namespace CoiSA\Http\Test\Middleware;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
 use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
 use Prophecy\Argument;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class ErrorHandlerMiddlewareTest
@@ -29,28 +27,22 @@ final class ErrorHandlerMiddlewareTest extends AbstractMiddlewareTest
 
         $this->middleware = new ErrorHandlerMiddleware($this->handler->reveal());
 
-        $this->serverRequest->withAttribute(ErrorHandlerMiddleware::class, Argument::type(\Throwable::class))->will([$this->serverRequest, 'reveal']);
+        $this->serverRequest->withAttribute(Argument::type('string'), Argument::type(\Throwable::class))->will([$this->serverRequest, 'reveal']);
     }
 
     public function testSuccessExecutionReturnHandlerResponse(): void
     {
-        $handler         = $this->prophesize(RequestHandlerInterface::class);
-        $handlerResponse = $this->prophesize(ResponseInterface::class);
-        $handler->handle($this->serverRequest->reveal())->will([$handlerResponse, 'reveal']);
-
-        $response = $this->middleware->process($this->serverRequest->reveal(), $handler->reveal());
-        $this->assertSame($handlerResponse->reveal(), $response);
+        $response = $this->middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
+        $this->assertSame($this->nextResponse->reveal(), $response);
         $this->assertNotSame($this->response->reveal(), $response);
     }
 
     public function testOnExceptionReturnErrorHandlerResponse(): void
     {
-        $handler         = $this->prophesize(RequestHandlerInterface::class);
-        $handlerResponse = $this->prophesize(ResponseInterface::class);
-        $handler->handle($this->serverRequest->reveal())->willThrow(\Exception::class);
+        $this->nextHandler->handle($this->serverRequest->reveal())->willThrow(\Exception::class);
 
-        $response = $this->middleware->process($this->serverRequest->reveal(), $handler->reveal());
+        $response = $this->middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
         $this->assertSame($this->response->reveal(), $response);
-        $this->assertNotSame($handlerResponse->reveal(), $response);
+        $this->assertNotSame($this->nextResponse->reveal(), $response);
     }
 }
