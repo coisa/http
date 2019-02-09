@@ -10,6 +10,7 @@
 
 namespace CoiSA\Http;
 
+use CoiSA\Http\Handler\CallableHandler;
 use CoiSA\Http\Handler\MiddlewareHandler;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
@@ -56,7 +57,15 @@ class Application implements ApplicationInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        return $this->dispatcher->sendRequest($request);
+        $dispatcher = $this->dispatcher;
+
+        $handler = new CallableHandler(function (ServerRequestInterface $request) use ($dispatcher) {
+            return $dispatcher->sendRequest($request);
+        });
+
+        // @FIXME transform Request into ServerRequest
+
+        return $this->errorHandler->process($request, $handler);
     }
 
     /**
