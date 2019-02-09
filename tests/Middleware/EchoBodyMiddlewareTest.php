@@ -11,33 +11,19 @@
 namespace CoiSA\Http\Test\Middleware;
 
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
-use PHPUnit\Framework\TestCase;
+use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class EchoBodyMiddlewareTest
  *
  * @package CoiSA\Http\Test
  */
-final class EchoBodyMiddlewareTest extends TestCase
+final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
 {
-    /** @var EchoBodyMiddleware */
-    private $middleware;
-
-    /** @var ObjectProphecy|RequestHandlerInterface */
-    private $requestHandler;
-
-    /** @var ObjectProphecy|ServerRequestInterface */
-    private $serverRequest;
-
-    /** @var ObjectProphecy|ResponseInterface */
-    private $response;
-
     /** @var string */
     private $content;
 
@@ -46,13 +32,11 @@ final class EchoBodyMiddlewareTest extends TestCase
 
     public function setUp(): void
     {
-        $this->middleware     = new EchoBodyMiddleware();
-        $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
-        $this->serverRequest  = $this->prophesize(ServerRequestInterface::class);
-        $this->response       = $this->prophesize(ResponseInterface::class);
-        $this->body           = $this->prophesize(StreamInterface::class);
+        parent::setUp();
 
-        $this->requestHandler->handle($this->serverRequest->reveal())->will([$this->response, 'reveal']);
+        $this->middleware = new EchoBodyMiddleware();
+
+        $this->body = $this->prophesize(StreamInterface::class);
 
         $this->content = \uniqid('content', true);
         $this->response->getBody()->will([$this->body, 'reveal']);
@@ -75,13 +59,13 @@ final class EchoBodyMiddlewareTest extends TestCase
 
     public function testProcessReturnResponse(): void
     {
-        $response = $this->middleware->process($this->serverRequest->reveal(), $this->requestHandler->reveal());
+        $response = $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     public function testProcessEchoResponseBodyContent(): void
     {
-        $this->middleware->process($this->serverRequest->reveal(), $this->requestHandler->reveal());
+        $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
         $content = \ob_get_clean();
         $this->assertEquals($this->content, $content);
     }

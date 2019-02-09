@@ -12,35 +12,19 @@ namespace CoiSA\Http\Test\Handler;
 
 use CoiSA\Http\Middleware\StatusCodeMiddleware;
 use Fig\Http\Message\StatusCodeInterface;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class StatusCodeMiddlewareTest
  *
  * @package CoiSA\Http\Test\Handler
  */
-final class StatusCodeMiddlewareTest extends TestCase
+final class StatusCodeMiddlewareTest extends AbstractMiddlewareTest
 {
-    /** @var ObjectProphecy|RequestHandlerInterface */
-    private $handler;
-
-    /** @var ObjectProphecy|ServerRequestInterface */
-    private $serverRequest;
-
-    /** @var ObjectProphecy|ResponseInterface */
-    private $response;
-
     public function setUp(): void
     {
-        $this->handler       = $this->prophesize(RequestHandlerInterface::class);
-        $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
-        $this->response      = $this->prophesize(ResponseInterface::class);
+        parent::setUp();
 
-        $this->handler->handle($this->serverRequest->reveal())->will([$this->response, 'reveal']);
+        $this->middleware = new StatusCodeMiddleware(StatusCodeInterface::STATUS_OK);
     }
 
     public function testInvalidStatusThrowsUnexpectedValueException(): void
@@ -58,11 +42,10 @@ final class StatusCodeMiddlewareTest extends TestCase
      */
     public function testResponseHaveSameGivenStatusCode($statusCode): void
     {
-        $this->response->withStatus($statusCode)->will([$this->response, 'reveal']);
         $this->response->getStatusCode()->willReturn($statusCode);
 
         $middleware  = new StatusCodeMiddleware($statusCode);
-        $response = $middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
+        $response    = $middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
 
         $this->assertEquals($statusCode, $response->getStatusCode());
     }

@@ -10,13 +10,10 @@
 
 namespace CoiSA\Http\Test\Middleware;
 
-use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
-use PHPUnit\Framework\TestCase;
+use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
 use Prophecy\Argument;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -24,34 +21,20 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Test\Middleware
  */
-final class ErrorHandlerMiddlewareTest extends TestCase
+final class ErrorHandlerMiddlewareTest extends AbstractMiddlewareTest
 {
-    /** @var EchoBodyMiddleware */
-    private $middleware;
-
-    /** @var ObjectProphecy|RequestHandlerInterface */
-    private $requestHandler;
-
-    /** @var ObjectProphecy|ServerRequestInterface */
-    private $serverRequest;
-
-    /** @var ObjectProphecy|ResponseInterface */
-    private $response;
-
     public function setUp(): void
     {
-        $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
-        $this->serverRequest  = $this->prophesize(ServerRequestInterface::class);
-        $this->response       = $this->prophesize(ResponseInterface::class);
-        $this->middleware     = new ErrorHandlerMiddleware($this->requestHandler->reveal());
+        parent::setUp();
 
-        $this->requestHandler->handle($this->serverRequest->reveal())->will([$this->response, 'reveal']);
+        $this->middleware = new ErrorHandlerMiddleware($this->handler->reveal());
+
         $this->serverRequest->withAttribute(ErrorHandlerMiddleware::class, Argument::type(\Throwable::class))->will([$this->serverRequest, 'reveal']);
     }
 
-    public function testSuccessExecutionReturnHandlerResponse()
+    public function testSuccessExecutionReturnHandlerResponse(): void
     {
-        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler         = $this->prophesize(RequestHandlerInterface::class);
         $handlerResponse = $this->prophesize(ResponseInterface::class);
         $handler->handle($this->serverRequest->reveal())->will([$handlerResponse, 'reveal']);
 
@@ -60,9 +43,9 @@ final class ErrorHandlerMiddlewareTest extends TestCase
         $this->assertNotSame($this->response->reveal(), $response);
     }
 
-    public function testOnExceptionReturnErrorHandlerResponse()
+    public function testOnExceptionReturnErrorHandlerResponse(): void
     {
-        $handler = $this->prophesize(RequestHandlerInterface::class);
+        $handler         = $this->prophesize(RequestHandlerInterface::class);
         $handlerResponse = $this->prophesize(ResponseInterface::class);
         $handler->handle($this->serverRequest->reveal())->willThrow(\Exception::class);
 

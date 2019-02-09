@@ -11,10 +11,8 @@
 namespace CoiSA\Http\Test\Middleware;
 
 use CoiSA\Http\Middleware\RequestHandlerMiddleware;
-use PHPUnit\Framework\TestCase;
+use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -23,34 +21,21 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http\Test
  */
-final class RequestHandlerMiddlewareTest extends TestCase
+final class RequestHandlerMiddlewareTest extends AbstractMiddlewareTest
 {
-    /** @var RequestHandlerMiddleware */
-    private $middleware;
-
-    /** @var ObjectProphecy|RequestHandlerInterface */
-    private $requestHandler;
-
     /** @var ObjectProphecy|RequestHandlerInterface */
     private $next;
-
-    /** @var ObjectProphecy|ServerRequestInterface */
-    private $serverRequest;
-
-    /** @var ObjectProphecy|ResponseInterface */
-    private $response;
 
     /** @var array */
     private $execution = [];
 
     public function setUp(): void
     {
-        $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
-        $this->next           = $this->prophesize(RequestHandlerInterface::class);
-        $this->serverRequest  = $this->prophesize(ServerRequestInterface::class);
-        $this->response       = $this->prophesize(ResponseInterface::class);
+        parent::setUp();
 
-        $this->middleware     = new RequestHandlerMiddleware($this->requestHandler->reveal());
+        $this->middleware = new RequestHandlerMiddleware($this->handler->reveal());
+
+        $this->next       = $this->prophesize(RequestHandlerInterface::class);
 
         $testClass = $this;
         $callback  = function () use ($testClass) {
@@ -59,7 +44,7 @@ final class RequestHandlerMiddlewareTest extends TestCase
             return $testClass->response->reveal();
         };
 
-        $this->requestHandler->handle($this->serverRequest->reveal())->will($callback);
+        $this->handler->handle($this->serverRequest->reveal())->will($callback);
         $this->next->handle($this->serverRequest->reveal())->will($callback);
     }
 
@@ -73,14 +58,14 @@ final class RequestHandlerMiddlewareTest extends TestCase
     {
         $serverRequest  = $this->serverRequest->reveal();
         $response       = $this->middleware->handle($serverRequest);
-        $requestHandler = $this->requestHandler->reveal();
+        $requestHandler = $this->handler->reveal();
         $this->assertEquals($requestHandler->handle($serverRequest), $response);
     }
 
     public function testProcessExecuteBothHandlersInOrder(): void
     {
         $expected = [
-            \spl_object_hash($this->requestHandler),
+            \spl_object_hash($this->handler),
             \spl_object_hash($this->next),
         ];
         $this->middleware->process($this->serverRequest->reveal(), $this->next->reveal());
@@ -91,7 +76,7 @@ final class RequestHandlerMiddlewareTest extends TestCase
     {
         $serverRequest  = $this->serverRequest->reveal();
         $response       = $this->middleware->process($serverRequest, $this->next->reveal());
-        $requestHandler = $this->requestHandler->reveal();
+        $requestHandler = $this->handler->reveal();
         $this->assertEquals($requestHandler->handle($serverRequest), $response);
     }
 }
