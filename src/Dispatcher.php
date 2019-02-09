@@ -32,7 +32,7 @@ class Dispatcher implements DispatcherInterface
     private $handler;
 
     /**
-     * @var PsrHttpClient
+     * @var RequestHandlerClient
      */
     private $client;
 
