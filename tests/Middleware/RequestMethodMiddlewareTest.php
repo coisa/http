@@ -12,7 +12,6 @@ namespace CoiSA\Http\Test\Handler;
 
 use CoiSA\Http\Middleware\RequestMethodMiddleware;
 use Fig\Http\Message\RequestMethodInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class RequestMethodMiddlewareTest
