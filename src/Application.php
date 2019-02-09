@@ -38,14 +38,14 @@ class Application implements ApplicationInterface
     /**
      * Application constructor.
      *
-     * @param DispatcherInterface $dispatcher
+     * @param DispatcherInterface     $dispatcher
      * @param RequestHandlerInterface $errorHandler
      */
     public function __construct(
         DispatcherInterface $dispatcher,
         RequestHandlerInterface $errorHandler
     ) {
-        $this->dispatcher = $dispatcher;
+        $this->dispatcher   = $dispatcher;
         $this->errorHandler = new ErrorHandlerMiddleware($errorHandler);
     }
 

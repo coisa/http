@@ -10,10 +10,6 @@
 
 namespace CoiSA\Http;
 
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Server\MiddlewareInterface;
-use Psr\Http\Server\RequestHandlerInterface;
-
 /**
  * Interface ApplicationInterface
  *

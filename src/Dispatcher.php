@@ -39,9 +39,9 @@ class Dispatcher implements DispatcherInterface
     /**
      * Dispatcher constructor.
      *
-     * @param RequestHandlerInterface $handler
-     * @param MiddlewareInterface $middleware
-     * @param ServerRequestFactoryInterface|null $serverRequestFactory
+     * @param RequestHandlerInterface            $handler
+     * @param MiddlewareInterface                $middleware
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
      */
     public function __construct(
         RequestHandlerInterface $handler,
