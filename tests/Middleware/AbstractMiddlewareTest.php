@@ -28,11 +28,17 @@ abstract class AbstractMiddlewareTest extends TestCase
     /** @var ObjectProphecy|RequestHandlerInterface */
     protected $handler;
 
+    /** @var ObjectProphecy|RequestHandlerInterface */
+    protected $nextHandler;
+
     /** @var ObjectProphecy|ServerRequestInterface */
     protected $serverRequest;
 
     /** @var ObjectProphecy|ResponseInterface */
     protected $response;
+
+    /** @var ObjectProphecy|ResponseInterface */
+    protected $nextResponse;
 
     /** @var MiddlewareInterface */
     protected $middleware;
@@ -40,16 +46,23 @@ abstract class AbstractMiddlewareTest extends TestCase
     public function setUp(): void
     {
         $this->handler       = $this->prophesize(RequestHandlerInterface::class);
+        $this->nextHandler   = $this->prophesize(RequestHandlerInterface::class);
         $this->serverRequest = $this->prophesize(ServerRequestInterface::class);
         $this->response      = $this->prophesize(ResponseInterface::class);
+        $this->nextResponse  = $this->prophesize(ResponseInterface::class);
 
         $this->handler->handle($this->serverRequest->reveal())->will([$this->response, 'reveal']);
+        $this->nextHandler->handle($this->serverRequest->reveal())->will([$this->nextResponse, 'reveal']);
+
         $this->response->withStatus(Argument::type('int'))->will([$this->response, 'reveal']);
+        $this->nextResponse->withStatus(Argument::type('int'))->will([$this->nextResponse, 'reveal']);
     }
 
     public function testProcessMethodReturnResponse(): void
     {
         $response = $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
+
+        $this->assertInstanceOf(ResponseInterface::class, $response);
         $this->assertSame($this->response->reveal(), $response);
     }
 }

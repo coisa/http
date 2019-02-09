@@ -40,7 +40,7 @@ final class StatusCodeMiddlewareTest extends AbstractMiddlewareTest
      *
      * @param int $statusCode
      */
-    public function testResponseHaveSameGivenStatusCode($statusCode): void
+    public function testResponseHaveSameGivenStatusCode(int $statusCode): void
     {
         $this->response->getStatusCode()->willReturn($statusCode);
 

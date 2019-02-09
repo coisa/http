@@ -12,6 +12,7 @@ namespace CoiSA\Http\Test\Handler;
 
 use CoiSA\Http\Middleware\RequestMethodMiddleware;
 use Fig\Http\Message\RequestMethodInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class RequestMethodMiddlewareTest
@@ -28,5 +29,65 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
             RequestMethodInterface::METHOD_GET,
             $this->handler->reveal()
         );
+    }
+
+    public function testInvalidMethodThrowException()
+    {
+        $this->expectException(\UnexpectedValueException::class);
+
+        new RequestMethodMiddleware(
+            uniqid('test', false),
+            $this->handler->reveal()
+        );
+    }
+
+    public function provideMethods()
+    {
+        $reflection    = new \ReflectionClass(RequestMethodInterface::class);
+        $allowedMethods = $reflection->getConstants();
+
+        return \array_chunk($allowedMethods, 1);
+    }
+
+    /**
+     * @dataProvider provideMethods
+     *
+     * @param string $method
+     */
+    public function testGivenMethodReturnHandlerResponse(string $method)
+    {
+        $this->serverRequest->getMethod()->willReturn($method);
+
+        $middleware = new RequestMethodMiddleware(
+            $method,
+            $this->handler->reveal()
+        );
+
+        $response = $middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
+
+        $this->assertSame($this->response->reveal(), $response);
+    }
+
+    /**
+     * @dataProvider provideMethods
+     *
+     * @param string $method
+     */
+    public function testDiffMethodReturnNextResponse(string $method)
+    {
+        $this->serverRequest->getMethod()->willReturn(
+            $method === RequestMethodInterface::METHOD_GET ?
+                RequestMethodInterface::METHOD_POST :
+                RequestMethodInterface::METHOD_GET
+        );
+
+        $middleware = new RequestMethodMiddleware(
+            $method,
+            $this->handler->reveal()
+        );
+
+        $response = $middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
+
+        $this->assertSame($this->nextResponse->reveal(), $response);
     }
 }

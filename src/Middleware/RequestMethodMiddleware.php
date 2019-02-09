@@ -47,7 +47,7 @@ final class RequestMethodMiddleware implements MiddlewareInterface
 
         $constant = RequestMethodInterface::class . '::METHOD_' . $this->method;
 
-        if (null === \constant($constant)) {
+        if (false === \defined($constant)) {
             throw new \UnexpectedValueException('Invalid HTTP method');
         }
     }
