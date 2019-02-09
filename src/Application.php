@@ -13,12 +13,9 @@ namespace CoiSA\Http;
 use CoiSA\Http\Handler\CallableHandler;
 use CoiSA\Http\Handler\MiddlewareHandler;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
-use CoiSA\Http\Middleware\RequestHandlerMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
