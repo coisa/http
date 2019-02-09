@@ -10,7 +10,7 @@
 
 namespace CoiSA\Http\Test\Handler;
 
-use CoiSA\Http\Handler\StatusCodeHandler;
+use CoiSA\Http\Middleware\StatusCodeMiddleware;
 use Fig\Http\Message\StatusCodeInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -19,11 +19,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class StatusCodeHandlerTest
+ * Class StatusCodeMiddlewareTest
  *
  * @package CoiSA\Http\Test\Handler
  */
-final class StatusCodeHandlerTest extends TestCase
+final class StatusCodeMiddlewareTest extends TestCase
 {
     /** @var ObjectProphecy|RequestHandlerInterface */
     private $handler;
@@ -46,7 +46,9 @@ final class StatusCodeHandlerTest extends TestCase
     public function testInvalidStatusThrowsUnexpectedValueException(): void
     {
         $this->expectException(\UnexpectedValueException::class);
-        new StatusCodeHandler($this->handler->reveal(), \rand(600, 700));
+
+        $middleware = new StatusCodeMiddleware(\rand(600, 700));
+        $middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
     }
 
     /**
@@ -59,8 +61,8 @@ final class StatusCodeHandlerTest extends TestCase
         $this->response->withStatus($statusCode)->will([$this->response, 'reveal']);
         $this->response->getStatusCode()->willReturn($statusCode);
 
-        $handler  = new StatusCodeHandler($this->handler->reveal(), $statusCode);
-        $response = $handler->handle($this->serverRequest->reveal());
+        $middleware  = new StatusCodeMiddleware($statusCode);
+        $response = $middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
 
         $this->assertEquals($statusCode, $response->getStatusCode());
     }

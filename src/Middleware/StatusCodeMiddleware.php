@@ -8,43 +8,35 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http\Handler;
+namespace CoiSA\Http\Middleware;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class StatusCodeHandler
+ * Class StatusCodeMiddleware
  *
- * @package CoiSA\Http\Handler
+ * @package CoiSA\Http\Middleware
  */
-final class StatusCodeHandler implements RequestHandlerInterface
+final class StatusCodeMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var RequestHandlerInterface
-     */
-    private $handler;
-
     /**
      * @var int
      */
     private $statusCode;
 
     /**
-     * StatusCodeHandler constructor.
+     * StatusCodeMiddleware constructor.
      *
-     * @param RequestHandlerInterface $requestHandler
-     * @param int                     $statusCode
+     * @param int $statusCode
      *
      * @throws \ReflectionException
      */
-    public function __construct(
-        RequestHandlerInterface $requestHandler,
-        int $statusCode
-    ) {
-        $this->handler    = $requestHandler;
+    public function __construct(int $statusCode)
+    {
         $this->statusCode = $statusCode;
 
         $reflection    = new \ReflectionClass(StatusCodeInterface::class);
@@ -56,13 +48,11 @@ final class StatusCodeHandler implements RequestHandlerInterface
     }
 
     /**
-     * @param ServerRequestInterface $request
-     *
-     * @return ResponseInterface
+     * {@inheritdoc}
      */
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $this->handler->handle($request)
+        return $handler->handle($request)
             ->withStatus($this->statusCode);
     }
 }

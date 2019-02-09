@@ -10,7 +10,6 @@
 
 namespace CoiSA\Http\Middleware;
 
-use CoiSA\Http\Handler\StatusCodeHandler;
 use Fig\Http\Message\RequestMethodInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -62,12 +61,9 @@ final class RequestMethodMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->method !== $request->getMethod()) {
-            $handler = new StatusCodeHandler(
-                $handler,
-                StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED
-            );
+            $middleware = new StatusCodeMiddleware(StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED);
 
-            return $handler->handle($request);
+            return $middleware->process($request, $handler);
         }
 
         return $this->handler->handle($request);

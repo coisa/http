@@ -12,6 +12,7 @@ namespace CoiSA\Http\Handler;
 
 use CoiSA\Http\Middleware\PregMatchRequestTargetMiddleware;
 use CoiSA\Http\Middleware\RequestMethodMiddleware;
+use CoiSA\Http\Middleware\StatusCodeMiddleware;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -74,12 +75,9 @@ final class RouterHandler implements RequestHandlerInterface
         if (!$middleware) {
             \reset($this->routes);
 
-            $handler = new StatusCodeHandler(
-                $this->notFoundHandler,
-                StatusCodeInterface::STATUS_NOT_FOUND
-            );
+            $middleware = new StatusCodeMiddleware(StatusCodeInterface::STATUS_NOT_FOUND);
 
-            return $handler->handle($request);
+            return $middleware->process($request, $this->notFoundHandler);
         }
 
         \next($this->routes);
