@@ -10,7 +10,7 @@
 
 namespace CoiSA\Http\Test;
 
-use CoiSA\Http\PsrHttpClient;
+use CoiSA\Http\Client\RequestHandlerClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class PsrHttpClientTest
+ * Class RequestHandlerClientTest
  *
  * @package CoiSA\Http\Test
  */
-final class PsrHttpClientTest extends TestCase
+final class RequestHandlerClientTest extends TestCase
 {
     /** @var ObjectProphecy|RequestHandlerInterface */
     private $requestHandler;
@@ -64,25 +64,25 @@ final class PsrHttpClientTest extends TestCase
 
     public function testImplementClientInterface(): void
     {
-        $client = new PsrHttpClient($this->requestHandler->reveal());
+        $client = new RequestHandlerClient($this->requestHandler->reveal());
         $this->assertInstanceOf(ClientInterface::class, $client);
     }
 
     public function testConstructorWithoutServerRequestFactory(): void
     {
-        $client = new PsrHttpClient($this->requestHandler->reveal());
-        $this->assertInstanceOf(PsrHttpClient::class, $client);
+        $client = new RequestHandlerClient($this->requestHandler->reveal());
+        $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
     public function testConstructorWithServerRequestFactory(): void
     {
-        $client = new PsrHttpClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
-        $this->assertInstanceOf(PsrHttpClient::class, $client);
+        $client = new RequestHandlerClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
+        $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
     public function testSendServerRequestReturnResponse(): void
     {
-        $client   = new PsrHttpClient($this->requestHandler->reveal());
+        $client   = new RequestHandlerClient($this->requestHandler->reveal());
         $response = $client->sendRequest($this->serverRequest->reveal());
 
         $this->assertInstanceOf(ResponseInterface::class, $response);
@@ -90,7 +90,7 @@ final class PsrHttpClientTest extends TestCase
 
     public function testSendRequestReturnResponse(): void
     {
-        $client   = new PsrHttpClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
+        $client   = new RequestHandlerClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
         $response = $client->sendRequest($this->request->reveal());
 
         $this->assertInstanceOf(ResponseInterface::class, $response);

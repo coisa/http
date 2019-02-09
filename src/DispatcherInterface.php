@@ -19,6 +19,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  *
  * @package CoiSA\Http
  */
-interface ApplicationInterface extends DispatcherInterface
+interface DispatcherInterface extends ClientInterface, MiddlewareInterface, RequestHandlerInterface
 {
 }

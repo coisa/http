@@ -8,7 +8,7 @@
  * with this source code in the file LICENSE.
  */
 
-namespace CoiSA\Http;
+namespace CoiSA\Http\Client;
 
 use CoiSA\Http\Message\ServerRequestFactory;
 use Psr\Http\Client\ClientInterface;
@@ -19,11 +19,11 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * Class PsrHttpClient
+ * Class RequestHandlerClient
  *
  * @package CoiSA\Http
  */
-final class PsrHttpClient implements ClientInterface
+final class RequestHandlerClient implements ClientInterface
 {
     /**
      * @var RequestHandlerInterface
@@ -36,7 +36,7 @@ final class PsrHttpClient implements ClientInterface
     private $serverRequestFactory;
 
     /**
-     * PsrHttpClient constructor.
+     * RequestHandlerClient constructor.
      *
      * @param RequestHandlerInterface            $defaultHandler
      * @param null|ServerRequestFactoryInterface $serverRequestFactory
