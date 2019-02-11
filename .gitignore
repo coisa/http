@@ -1,5 +1,5 @@
 .idea/
-docs/coverage/
+docs/
 vendor/
 *.cache
 composer.lock
