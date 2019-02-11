@@ -69,7 +69,7 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
         $uploadedFiles = $request->getUploadedFiles();
 
         if ($this->filter) {
-            $uploadedFiles = $this->filter->filter(/** @scrutinizer ignore-type */ $uploadedFiles);
+            $uploadedFiles = $this->filter->filter(...$uploadedFiles);
         }
 
         if (!empty($uploadedFiles)) {
