@@ -1,5 +1,6 @@
 # CoiSA HTTP
 
+[![PHP Version][ico-php]][link-packagist]
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-build]][link-build]
@@ -22,6 +23,7 @@
 Please see [License File](LICENSE.md) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/coisa/http.svg?style=flat-square
+[ico-php]: https://img.shields.io/packagist/php-v/coisa/http.svg?style=flat-square
 [ico-license]: https://img.shields.io/github/license/coisa/http.svg?style=flat-square
 [ico-build]: https://img.shields.io/scrutinizer/build/g/coisa/http/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/coisa/http.svg?style=flat-square
