@@ -56,6 +56,12 @@ abstract class AbstractMiddlewareTest extends TestCase
 
         $this->response->withStatus(Argument::type('int'))->will([$this->response, 'reveal']);
         $this->nextResponse->withStatus(Argument::type('int'))->will([$this->nextResponse, 'reveal']);
+
+        $this->response->getHeaders()->will([$this->response, 'reveal']);
+        $this->nextResponse->getHeaders()->will([$this->nextResponse, 'reveal']);
+
+        $this->response->hasHeader(Argument::type('string'))->willReturn(true);
+        $this->nextResponse->hasHeader(Argument::type('string'))->willReturn(true);
     }
 
     public function testImplementsPsrServerMiddleware(): void
