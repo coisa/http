@@ -65,6 +65,7 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        /** @var UploadedFileInterface[] $uploadedFiles */
         $uploadedFiles = $request->getUploadedFiles();
 
         if ($this->filter) {
@@ -72,7 +73,6 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
         }
 
         if (!empty($uploadedFiles)) {
-            /** @var UploadedFileInterface $uploadedFile */
             foreach ($uploadedFiles as $uploadedFile) {
                 $uploadedFile->moveTo($this->targetPath);
             }
