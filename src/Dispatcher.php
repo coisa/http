@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 class Dispatcher implements DispatcherInterface
 {
     /**
-     * @var RequestHandlerInterface
+     * @var MiddlewareHandler
      */
     private $handler;
 
