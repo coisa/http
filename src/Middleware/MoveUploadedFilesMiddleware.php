@@ -46,14 +46,14 @@ final class MoveUploadedFilesMiddleware implements MiddlewareInterface
         $this->filter     = $filter;
 
         if (!\is_dir($this->targetPath)) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new \UnexpectedValueException(\sprintf(
                 'The given target path `%s` is not a directory',
                 $this->targetPath
             ));
         }
 
         if (!\is_writable($this->targetPath)) {
-            throw new \RuntimeException(sprintf(
+            throw new \RuntimeException(\sprintf(
                 'The target directory `%s` does not exists or is not writable',
                 $this->targetPath
             ));

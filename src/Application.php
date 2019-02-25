@@ -10,12 +10,12 @@
 
 namespace CoiSA\Http;
 
-use CoiSA\Http\Handler\CallableHandler;
 use CoiSA\Http\Handler\MiddlewareHandler;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -26,14 +26,9 @@ use Psr\Http\Server\RequestHandlerInterface;
 class Application implements ApplicationInterface
 {
     /**
-     * @var DispatcherInterface
+     * @var MiddlewareInterface
      */
-    private $dispatcher;
-
-    /**
-     * @var ErrorHandlerMiddleware
-     */
-    private $errorHandler;
+    private $middleware;
 
     /**
      * Application constructor.
@@ -45,8 +40,11 @@ class Application implements ApplicationInterface
         DispatcherInterface $dispatcher,
         RequestHandlerInterface $errorHandler
     ) {
-        $this->dispatcher   = $dispatcher;
-        $this->errorHandler = new ErrorHandlerMiddleware($errorHandler);
+        $middleware       = new ErrorHandlerMiddleware($errorHandler);
+        $this->middleware = new MiddlewareHandler(
+            $middleware,
+            $dispatcher
+        );
     }
 
     /**
@@ -54,15 +52,7 @@ class Application implements ApplicationInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
-        $dispatcher = $this->dispatcher;
-
-        $handler = new CallableHandler(function (ServerRequestInterface $request) use ($dispatcher) {
-            return $dispatcher->sendRequest($request);
-        });
-
-        // @FIXME transform Request into ServerRequest
-
-        return $this->errorHandler->process($request, $handler);
+        return $this->handle($request);
     }
 
     /**
@@ -70,7 +60,7 @@ class Application implements ApplicationInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        return $this->errorHandler->process($request, $this->dispatcher);
+        return $this->middleware->handle($request);
     }
 
     /**
@@ -78,11 +68,6 @@ class Application implements ApplicationInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $handler = new MiddlewareHandler(
-            $this->dispatcher,
-            $handler
-        );
-
-        return $this->errorHandler->process($request, $handler);
+        return $this->middleware->process($request, $handler);
     }
 }

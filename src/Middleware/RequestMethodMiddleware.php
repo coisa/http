@@ -35,6 +35,11 @@ final class RequestMethodMiddleware implements MiddlewareInterface
     private $handler;
 
     /**
+     * @var MiddlewareInterface
+     */
+    private $middleware;
+
+    /**
      * RequestMethodMiddleware constructor.
      *
      * @param string                  $method
@@ -42,14 +47,15 @@ final class RequestMethodMiddleware implements MiddlewareInterface
      */
     public function __construct(string $method, RequestHandlerInterface $handler)
     {
-        $this->method  = \strtoupper($method);
-        $this->handler = $handler;
-
-        $constant = RequestMethodInterface::class . '::METHOD_' . $this->method;
+        $constant = RequestMethodInterface::class . '::METHOD_' . \strtoupper($method);
 
         if (false === \defined($constant)) {
             throw new \UnexpectedValueException('Invalid HTTP method');
         }
+
+        $this->method     = \constant($constant);
+        $this->handler    = $handler;
+        $this->middleware = new StatusCodeMiddleware(StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED);
     }
 
     /**
@@ -61,9 +67,7 @@ final class RequestMethodMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if ($this->method !== $request->getMethod()) {
-            $middleware = new StatusCodeMiddleware(StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED);
-
-            return $middleware->process($request, $handler);
+            return $this->middleware->process($request, $handler);
         }
 
         return $this->handler->handle($request);

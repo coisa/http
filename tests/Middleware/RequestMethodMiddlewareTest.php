@@ -12,6 +12,7 @@ namespace CoiSA\Http\Test\Handler;
 
 use CoiSA\Http\Middleware\RequestMethodMiddleware;
 use Fig\Http\Message\RequestMethodInterface;
+use Fig\Http\Message\StatusCodeInterface;
 
 /**
  * Class RequestMethodMiddlewareTest
@@ -28,6 +29,8 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
             RequestMethodInterface::METHOD_GET,
             $this->handler->reveal()
         );
+
+        $this->nextResponse->getStatusCode()->willReturn(StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED);
     }
 
     public function testInvalidMethodThrowException(): void
@@ -65,6 +68,7 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
         $response = $middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
 
         $this->assertSame($this->response->reveal(), $response);
+        $this->assertNotSame($this->nextResponse->reveal(), $response);
     }
 
     /**
@@ -72,7 +76,7 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
      *
      * @param string $method
      */
-    public function testDiffMethodReturnNextResponse(string $method): void
+    public function testDiffMethodReturnNextResponseWithStatusCodeMethodNotAllowed(string $method): void
     {
         $this->serverRequest->getMethod()->willReturn(
             $method === RequestMethodInterface::METHOD_GET ?
@@ -88,5 +92,8 @@ final class RequestMethodMiddlewareTest extends AbstractMiddlewareTest
         $response = $middleware->process($this->serverRequest->reveal(), $this->nextHandler->reveal());
 
         $this->assertSame($this->nextResponse->reveal(), $response);
+        $this->assertNotSame($this->response->reveal(), $response);
+
+        $this->assertEquals(StatusCodeInterface::STATUS_METHOD_NOT_ALLOWED, $response->getStatusCode());
     }
 }

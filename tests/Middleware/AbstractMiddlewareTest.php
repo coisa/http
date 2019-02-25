@@ -10,6 +10,7 @@
 
 namespace CoiSA\Http\Test\Handler;
 
+use Fig\Http\Message\RequestMethodInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -62,6 +63,11 @@ abstract class AbstractMiddlewareTest extends TestCase
 
         $this->response->hasHeader(Argument::type('string'))->willReturn(true);
         $this->nextResponse->hasHeader(Argument::type('string'))->willReturn(true);
+
+        $this->serverRequest->getQueryParams()->willReturn([]);
+        $this->serverRequest->getUploadedFiles()->willReturn([]);
+        $this->serverRequest->getMethod()->willReturn(RequestMethodInterface::METHOD_GET);
+        $this->serverRequest->withAttribute(Argument::type('string'), Argument::any())->will([$this->serverRequest, 'reveal']);
     }
 
     public function testImplementsPsrServerMiddleware(): void

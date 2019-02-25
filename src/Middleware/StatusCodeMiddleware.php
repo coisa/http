@@ -37,14 +37,14 @@ final class StatusCodeMiddleware implements MiddlewareInterface
      */
     public function __construct(int $statusCode)
     {
-        $this->statusCode = $statusCode;
-
         $reflection    = new \ReflectionClass(StatusCodeInterface::class);
         $allowedStatus = $reflection->getConstants();
 
-        if (!\in_array($this->statusCode, $allowedStatus)) {
+        if (!\in_array($statusCode, $allowedStatus)) {
             throw new \UnexpectedValueException('Invalid HTTP Status Code');
         }
+
+        $this->statusCode = $statusCode;
     }
 
     /**
@@ -52,7 +52,6 @@ final class StatusCodeMiddleware implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        return $handler->handle($request)
-            ->withStatus($this->statusCode);
+        return $handler->handle($request)->withStatus($this->statusCode);
     }
 }
