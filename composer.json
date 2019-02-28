@@ -15,6 +15,13 @@
         "optimize-autoloader": true
     },
     "scripts": {
+        "post-create-project-cmd": [
+            "@create-githooks-link"
+        ],
+        "create-githooks-link": [
+            "rm -rf .git/hooks",
+            "ln -sfT ../.git-hooks ./.git/hooks"
+        ],
         "cs-check": "php-cs-fixer fix --dry-run --diff",
         "cs-fix": "php-cs-fixer fix"
     },
