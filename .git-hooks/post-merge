@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Run GrumPHP
+exec 'vendor/bin/grumphp' 'run' '--testsuite=post-merge'
+
+exit 1

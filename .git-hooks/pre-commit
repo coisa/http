@@ -1,29 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-DIR=$(dirname "$(readlink -f "$0")")
-GIT_CHANGES=$(git diff --name-only --cached)
+# Fetch the GIT diff and format it as command input:
+DIFF=$(git -c diff.mnemonicprefix=false --no-pager diff -r -p -m -M --full-index --no-color --staged | cat)
 
-source ${DIR}/functions.sh
-
-echo "Files changed:"
-echo "${GIT_CHANGES}"
-echo
-
-if has_changed ".*\.php$"; then
-    PHPFILES=`get_changed ".*\.php$"`;
-
-    echo "Running tasks for PHP files:"
-    echo "${PHPFILES}"
-
-    fix_code_style $PHPFILES
-    lint_php $PHPFILES
-fi
-
-if has_changed ".*Test\.php$"; then
-    TESTFILES=`get_changed ".*Test\.php$"`;
-
-    echo "Running tasks for PHP TestCase files:"
-    echo "${TESTFILES}"
-
-    test_php $TESTFILES
-fi
+# Run GrumPHP
+(cd "./" && printf "%s\n" "${DIFF}" | exec 'vendor/bin/grumphp' 'git:pre-commit' '--skip-success-output')

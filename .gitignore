@@ -1,6 +1,8 @@
-*.kdev4
 .idea/
 docs/
 vendor/
-*.cache
+.directory
 composer.lock
+*.kdev4
+*.kate-swp
+*.cache

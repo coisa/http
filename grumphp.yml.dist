@@ -1,0 +1,75 @@
+parameters:
+    git_dir: .
+    bin_dir: vendor/bin
+    hooks_dir: ".git-hooks"
+    stop_on_failure: true
+    ascii:
+        failed: ~
+        succeeded: ~
+    tasks:
+        composer: ~
+        git_blacklist:
+            keywords:
+                - "die("
+                - "var_dump("
+                - "exit;"
+                - "exit("
+            metadata:
+                blocking: false
+        git_branch_name:
+            blacklist:
+                - "develop"
+                - "master"
+            metadata:
+                blocking: false
+        git_commit_message:
+            max_subject_width: 0
+            type_scope_conventions:
+                - types:
+                    - Added
+                    - Changed
+                    - Deprecated
+                    - Removed
+                    - Fixed
+                    - Security
+                    - Revert
+                - scopes:
+                    - api
+                    - browser
+                    - build
+                    - ci
+                    - dev
+                    - environment
+                    - doc
+                    - performance
+                    - refactor
+                    - style
+                    - test
+        jsonlint:
+            detect_key_conflicts: true
+        phpcs:
+            metadata:
+                blocking: false
+        phpcsfixer2: ~
+        phplint: ~
+        phpunit: ~
+        phpversion: ~
+        securitychecker: ~
+        xmllint:
+            triggered_by:
+                - xml
+                - xml.dist
+        yamllint: ~
+    testsuites:
+        post-merge:
+            tasks:
+                - composer
+                - phpunit
+        pre-push:
+            tasks:
+                - jsonlint
+                - phplint
+                - xmllint
+                - yamllint
+                - phpunit
+    extensions: []
