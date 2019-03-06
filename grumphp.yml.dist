@@ -45,6 +45,8 @@ parameters:
                     - refactor
                     - style
                     - test
+            metadata:
+                blocking: false
         jsonlint:
             detect_key_conflicts: true
         phpcs:
