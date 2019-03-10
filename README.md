@@ -11,7 +11,7 @@
 ## Install
 
 ```sh
- composer require coisa/http:1.0.x-dev
+$ composer require coisa/http:1.0.x-dev
 ```
 
 ## Credits
