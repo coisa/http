@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Run GrumPHP
+exec 'vendor/bin/grumphp' 'run' '--testsuite=pre-push'
