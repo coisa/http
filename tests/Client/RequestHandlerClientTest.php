@@ -15,6 +15,7 @@ namespace CoiSA\Http\Test;
 
 use CoiSA\Http\Client\RequestHandlerClient;
 use PHPUnit\Framework\TestCase;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
@@ -85,6 +86,8 @@ final class RequestHandlerClientTest extends TestCase
 
     public function testSendServerRequestReturnResponse(): void
     {
+        $this->requestHandler->handle(Argument::type(ServerRequestInterface::class))->shouldBeCalledOnce();
+
         $client   = new RequestHandlerClient($this->requestHandler->reveal());
         $response = $client->sendRequest($this->serverRequest->reveal());
 
@@ -93,6 +96,14 @@ final class RequestHandlerClientTest extends TestCase
 
     public function testSendRequestReturnResponse(): void
     {
+        $this->serverRequestFactory->createServerRequest(
+            Argument::type('string'),
+            Argument::type('string'),
+            Argument::type('array')
+        )->shouldBeCalledOnce();
+
+        $this->requestHandler->handle(Argument::type(RequestInterface::class))->shouldBeCalledOnce();
+
         $client   = new RequestHandlerClient($this->requestHandler->reveal(), $this->serverRequestFactory->reveal());
         $response = $client->sendRequest($this->request->reveal());
 
