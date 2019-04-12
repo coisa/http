@@ -49,13 +49,15 @@ final class RequestHandlerClientFactoryTest extends TestCase
 
         $this->container->has(ServerRequestFactoryInterface::class)->shouldBeCalledOnce()->willReturn(true);
 
-        $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
-        $this->container->get(ServerRequestFactoryInterface::class)->will([$this->serverRequestFactory, 'reveal']);
+        $this->container->get(RequestHandlerInterface::class)->shouldBeCalledOnce()->will([$this->requestHandler, 'reveal']);
+        $this->container->get(ServerRequestFactoryInterface::class)->shouldBeCalledOnce()->will([$this->serverRequestFactory, 'reveal']);
     }
 
     public function testFactoryWithRequestHandlerWithoutServerRequestFactoryReturnClient(): void
     {
         $this->container->has(ServerRequestFactoryInterface::class)->willReturn(false);
+
+        $this->container->get(ServerRequestFactoryInterface::class)->shouldNotBeCalled();
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
 
         ($this->factory)($this->container->reveal());
