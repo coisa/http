@@ -30,10 +30,10 @@ final class RequestHandlerClientFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var RequestHandlerInterface|ObjectProphecy */
+    /** @var ObjectProphecy|RequestHandlerInterface */
     private $requestHandler;
 
-    /** @var ServerRequestFactoryInterface|ObjectProphecy */
+    /** @var ObjectProphecy|ServerRequestFactoryInterface */
     private $serverRequestFactory;
 
     /** @var RequestHandlerClientFactory */
@@ -41,8 +41,8 @@ final class RequestHandlerClientFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->container = $this->prophesize(ContainerInterface::class);
-        $this->requestHandler = $this->prophesize(RequestHandlerInterface::class);
+        $this->container            = $this->prophesize(ContainerInterface::class);
+        $this->requestHandler       = $this->prophesize(RequestHandlerInterface::class);
         $this->serverRequestFactory = $this->prophesize(ServerRequestFactoryInterface::class);
 
         $this->factory = new RequestHandlerClientFactory();
@@ -53,7 +53,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->container->get(ServerRequestFactoryInterface::class)->will([$this->serverRequestFactory, 'reveal']);
     }
 
-    public function testFactoryWithRequestHandlerWithoutServerRequestFactoryReturnClient()
+    public function testFactoryWithRequestHandlerWithoutServerRequestFactoryReturnClient(): void
     {
         $this->container->has(ServerRequestFactoryInterface::class)->willReturn(false);
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
@@ -61,7 +61,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryWithRequestHandlerAndServerRequestFactoryReturnClient()
+    public function testFactoryWithRequestHandlerAndServerRequestFactoryReturnClient(): void
     {
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
         $this->container->get(ServerRequestFactoryInterface::class)->will([$this->serverRequestFactory, 'reveal']);
@@ -69,18 +69,18 @@ final class RequestHandlerClientFactoryTest extends TestCase
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryRaiseTypeErrorIfServiceNotRequestHandler()
+    public function testFactoryRaiseTypeErrorIfServiceNotRequestHandler(): void
     {
-        $this->container->get(RequestHandlerInterface::class)->willReturn(uniqid(__METHOD__, true));
+        $this->container->get(RequestHandlerInterface::class)->willReturn(\uniqid(__METHOD__, true));
 
         $this->expectException(\TypeError::class);
 
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryRaiseTypeErrorIfServiceNotServerRequestFactory()
+    public function testFactoryRaiseTypeErrorIfServiceNotServerRequestFactory(): void
     {
-        $this->container->get(ServerRequestFactoryInterface::class)->willReturn(uniqid(__METHOD__, true));
+        $this->container->get(ServerRequestFactoryInterface::class)->willReturn(\uniqid(__METHOD__, true));
 
         $this->expectException(\TypeError::class);
 
