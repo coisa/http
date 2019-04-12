@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Http\Test;
 
+use CoiSA\Http\Client\RequestHandlerClient;
 use CoiSA\Http\Client\RequestHandlerClientFactory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -60,7 +61,9 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->container->get(ServerRequestFactoryInterface::class)->shouldNotBeCalled();
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
 
-        ($this->factory)($this->container->reveal());
+        $client = ($this->factory)($this->container->reveal());
+
+        $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
     public function testFactoryWithRequestHandlerAndServerRequestFactoryReturnClient(): void
@@ -68,7 +71,9 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
         $this->container->get(ServerRequestFactoryInterface::class)->will([$this->serverRequestFactory, 'reveal']);
 
-        ($this->factory)($this->container->reveal());
+        $client = ($this->factory)($this->container->reveal());
+
+        $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
     public function testFactoryRaiseTypeErrorIfServiceNotRequestHandler(): void
