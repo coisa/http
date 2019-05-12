@@ -36,6 +36,19 @@ final class RequestHandlerClientFactory
         $serverRequestFactory = $container->has(ServerRequestFactoryInterface::class) ?
             $container->get(ServerRequestFactoryInterface::class) : null;
 
+        return $this->fromRequestHandler($requestHandler, $serverRequestFactory);
+    }
+
+    /**
+     * @param RequestHandlerInterface            $requestHandler
+     * @param null|ServerRequestFactoryInterface $serverRequestFactory
+     *
+     * @return RequestHandlerClient
+     */
+    public function fromRequestHandler(
+        RequestHandlerInterface $requestHandler,
+        ServerRequestFactoryInterface $serverRequestFactory = null
+    ): RequestHandlerClient {
         return new RequestHandlerClient($requestHandler, $serverRequestFactory);
     }
 }
