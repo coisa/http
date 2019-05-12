@@ -62,7 +62,7 @@ final class PregMatchRequestTargetMiddleware implements MiddlewareInterface
         $pattern = $this->pattern;
         $request = $request->withAttribute(
             self::class,
-            compact('pattern', 'matches')
+            \compact('pattern', 'matches')
         );
 
         return $this->handler->handle($request);
