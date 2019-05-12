@@ -15,6 +15,7 @@ namespace CoiSA\Http\Test\Middleware;
 
 use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Test\Handler\AbstractMiddlewareTest;
+use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\StreamInterface;
 
@@ -29,7 +30,10 @@ final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
     private $content;
 
     /** @var ObjectProphecy|StreamInterface */
-    private $body;
+    private $stream;
+
+    /** @var bool */
+    private $oef = false;
 
     public function setUp(): void
     {
@@ -37,11 +41,15 @@ final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
 
         $this->middleware = new EchoBodyMiddleware();
 
-        $this->body = $this->prophesize(StreamInterface::class);
-
         $this->content = \uniqid('content', true);
-        $this->response->getBody()->will([$this->body, 'reveal']);
-        $this->body->getContents()->willReturn($this->content);
+
+        $this->stream = $this->prophesize(StreamInterface::class);
+
+        $this->stream->isSeekable()->willReturn(false);
+        $this->stream->eof()->will([$this, 'getEof']);
+        $this->stream->read(Argument::type('integer'))->willReturn($this->content);
+
+        $this->response->getBody()->will([$this->stream, 'reveal']);
 
         \ob_start();
     }
@@ -53,10 +61,35 @@ final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
         }
     }
 
-    public function testProcessEchoResponseBodyContent(): void
+    public function getEof()
+    {
+        $oef = $this->oef;
+        $this->oef = !$this->oef;
+
+        return $oef;
+    }
+
+    public function testProcessWillReturnResponseBodyContent(): void
+    {
+        $this->stream->isSeekable()->shouldBeCalledOnce();
+        $this->stream->eof()->shouldBeCalledTimes(2);
+        $this->stream->read(Argument::type('integer'))->shouldBeCalledOnce();
+
+        $this->assertEquals($this->content, $this->processStreamContent());
+    }
+
+    public function testProcessWillRewindSeekableStreamBeforeEchoContent(): void
+    {
+        $this->stream->isSeekable()->willReturn(true);
+        $this->stream->rewind()->shouldBeCalledOnce();
+
+        $this->assertEquals($this->content, $this->processStreamContent());
+    }
+
+    private function processStreamContent()
     {
         $this->middleware->process($this->serverRequest->reveal(), $this->handler->reveal());
-        $content = \ob_get_clean();
-        $this->assertEquals($this->content, $content);
+
+        return \ob_get_clean();
     }
 }

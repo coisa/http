@@ -26,12 +26,40 @@ use Psr\Http\Server\RequestHandlerInterface;
 final class EchoBodyMiddleware implements MiddlewareInterface
 {
     /**
+     * @const string
+     */
+    const DEFAULT_BUFFER_SIZE = 1024 * 8;
+
+    /**
+     * @var int
+     */
+    private $bufferSize;
+
+    /**
+     * EchoBodyMiddleware constructor.
+     *
+     * @param int $bufferSize
+     */
+    public function __construct(int $bufferSize = self::DEFAULT_BUFFER_SIZE)
+    {
+        $this->bufferSize = $bufferSize;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $response = $handler->handle($request);
-        echo $response->getBody()->getContents();
+        $stream   = $response->getBody();
+
+        if ($stream->isSeekable()) {
+            $stream->rewind();
+        }
+
+        while (!$stream->eof()) {
+            echo $stream->read($this->bufferSize);
+        }
 
         return $response;
     }
