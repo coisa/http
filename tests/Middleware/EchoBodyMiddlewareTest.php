@@ -63,7 +63,7 @@ final class EchoBodyMiddlewareTest extends AbstractMiddlewareTest
 
     public function getEof()
     {
-        $oef = $this->oef;
+        $oef       = $this->oef;
         $this->oef = !$this->oef;
 
         return $oef;
