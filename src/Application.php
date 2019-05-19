@@ -14,7 +14,10 @@ declare(strict_types=1);
 namespace CoiSA\Http;
 
 use CoiSA\Http\Handler\MiddlewareHandler;
+use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
+use CoiSA\Http\Middleware\MiddlewareAggregator;
+use CoiSA\Http\Middleware\SendHeadersMiddleware;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -43,7 +46,12 @@ class Application implements ApplicationInterface
         DispatcherInterface $dispatcher,
         RequestHandlerInterface $errorHandler
     ) {
-        $middleware       = new ErrorHandlerMiddleware($errorHandler);
+        $middleware = new MiddlewareAggregator(
+            new SendHeadersMiddleware(),
+            new EchoBodyMiddleware(),
+            new ErrorHandlerMiddleware($errorHandler)
+        );
+
         $this->middleware = new MiddlewareHandler(
             $middleware,
             $dispatcher
@@ -55,6 +63,7 @@ class Application implements ApplicationInterface
      */
     public function sendRequest(RequestInterface $request): ResponseInterface
     {
+        // @FIXME convert RequestInterface to ServerRequestInterface
         return $this->handle($request);
     }
 
