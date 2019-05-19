@@ -15,8 +15,6 @@ namespace CoiSA\Http\Client;
 
 use CoiSA\Http\Handler\GuzzleHandler;
 use CoiSA\Http\Handler\HttpPlugHandler;
-use GuzzleHttp\ClientInterface;
-use http\Client;
 use Http\Client\HttpClient;
 use Psr\Container\ContainerInterface;
 
@@ -34,13 +32,13 @@ final class HttpPlugHandlerFactory
      */
     public function __invoke(ContainerInterface $container): HttpPlugHandler
     {
-        $client = $container->get(ClientInterface::class);
+        $client = $container->get(HttpClient::class);
 
         return $this->fromHttpPlugClient($client);
     }
 
     /**
-     * @param ClientInterface $client
+     * @param HttpClient $client
      *
      * @return GuzzleHandler
      */
