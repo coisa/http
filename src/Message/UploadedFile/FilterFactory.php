@@ -64,6 +64,6 @@ final class FilterFactory
      */
     public function fromFilters(FilterInterface ...$filters): FilterAggregator
     {
-        return new FilterAggregator($filters);
+        return new FilterAggregator(...$filters);
     }
 }
