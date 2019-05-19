@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CoiSA\Http\Middleware;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -31,13 +32,20 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     private $handler;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * ErrorHandlerMiddleware constructor.
      *
      * @param RequestHandlerInterface $handler
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(RequestHandlerInterface $handler)
+    public function __construct(RequestHandlerInterface $handler, EventDispatcherInterface $eventDispatcher)
     {
         $this->handler = $handler;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -52,6 +60,8 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
                 self::class,
                 $throwable
             );
+
+            $this->eventDispatcher->dispatch($throwable);
 
             return $this->handler->handle($errorRequest);
         }
