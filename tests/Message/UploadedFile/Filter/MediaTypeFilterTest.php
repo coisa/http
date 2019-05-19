@@ -11,35 +11,33 @@
 
 declare(strict_types=1);
 
-namespace CoiSA\Http\Test\Message\UploadedFile;
+namespace CoiSA\Http\Test\Message\UploadedFile\Filter;
 
-use CoiSA\Http\Message\UploadedFile\Filter\ExtensionFilter;
+use CoiSA\Http\Message\UploadedFile\Filter\MediaTypeFilter;
 use CoiSA\Http\Message\UploadedFile\FilterInterface;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Http\Message\UploadedFileInterface;
 
-final class ExtensionFilterTest extends TestCase
+final class MediaTypeFilterTest extends TestCase
 {
-    /** @var string Valid extension for tests */
-    private $extension;
+    /** @var string Valid media type */
+    private $type;
 
     /** @var ObjectProphecy|UploadedFileInterface */
     private $uploadedFile;
 
-    /** @var ExtensionFilter */
+    /** @var MediaTypeFilter */
     private $filter;
 
     public function setUp(): void
     {
-        $this->extension    = \uniqid('ext', false);
+        $this->type         = \uniqid('mediaType', false);
         $this->uploadedFile = $this->prophesize(UploadedFileInterface::class);
 
-        $this->uploadedFile->getClientFilename()->willReturn(
-            \uniqid('filename', false) . '.' . $this->extension
-        );
+        $this->uploadedFile->getClientMediaType()->willReturn($this->type);
 
-        $this->filter = new ExtensionFilter($this->extension);
+        $this->filter = new MediaTypeFilter($this->type);
     }
 
     public function testFilterImplementsFilterInterface(): void
@@ -63,12 +61,10 @@ final class ExtensionFilterTest extends TestCase
         $this->assertEquals($input, $filtered);
     }
 
-    public function testFilterWillRemoveNotAcceptableExtensions(): void
+    public function testFilterWillRemoveNotAcceptableMediaTypes(): void
     {
         $uploadedFile = $this->prophesize(UploadedFileInterface::class);
-        $uploadedFile->getClientFilename()->willReturn(
-            \uniqid('filename', false) . '.invalid'
-        );
+        $uploadedFile->getClientMediaType()->willReturn(\uniqid('invalid', false));
 
         $input = [
             $this->uploadedFile->reveal(),
