@@ -18,6 +18,7 @@ use CoiSA\Http\Middleware\EchoBodyMiddleware;
 use CoiSA\Http\Middleware\ErrorHandlerMiddleware;
 use CoiSA\Http\Middleware\MiddlewareAggregator;
 use CoiSA\Http\Middleware\SendHeadersMiddleware;
+use Phly\EventDispatcher\EventDispatcher;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,24 +33,29 @@ use Psr\Http\Server\RequestHandlerInterface;
 class Application implements ApplicationInterface
 {
     /**
-     * @var MiddlewareInterface
+     * @var MiddlewareHandler
      */
     private $middleware;
 
     /**
      * Application constructor.
      *
-     * @param DispatcherInterface     $dispatcher
+     * @param DispatcherInterface $dispatcher
      * @param RequestHandlerInterface $errorHandler
+     * @param EventDispatcher $eventDispatcher
      */
     public function __construct(
         DispatcherInterface $dispatcher,
-        RequestHandlerInterface $errorHandler
+        RequestHandlerInterface $errorHandler,
+        EventDispatcher $eventDispatcher
     ) {
         $middleware = new MiddlewareAggregator(
             new SendHeadersMiddleware(),
             new EchoBodyMiddleware(),
-            new ErrorHandlerMiddleware($errorHandler)
+            new ErrorHandlerMiddleware(
+                $errorHandler,
+                $eventDispatcher
+            )
         );
 
         $this->middleware = new MiddlewareHandler(
