@@ -44,8 +44,10 @@ final class MiddlewareHandlerFactory
      *
      * @return MiddlewareHandler
      */
-    public function plugMiddlewareAndHandler(MiddlewareInterface $middleware, RequestHandlerInterface $requestHandler): MiddlewareHandler
-    {
+    public function plugMiddlewareAndHandler(
+        MiddlewareInterface $middleware,
+        RequestHandlerInterface $requestHandler
+    ): MiddlewareHandler {
         return new MiddlewareHandler($middleware, $requestHandler);
     }
 }

@@ -31,7 +31,7 @@ final class HttpPlugHandlerFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var ObjectProphecy|HttpClient */
+    /** @var HttpClient|ObjectProphecy */
     private $client;
 
     /** @var GuzzleHandlerFactory */
@@ -47,14 +47,14 @@ final class HttpPlugHandlerFactoryTest extends TestCase
         $this->container->get(HttpClient::class)->shouldBeCalledOnce()->will([$this->client, 'reveal']);
     }
 
-    public function testFactoryWithHttpClientWillReturnHttpPlugHandler(): void
+    public function testInvokeWithHttpClientWillReturnHttpPlugHandler(): void
     {
         $client = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(HttpPlugHandler::class, $client);
     }
 
-    public function testFactoryRaiseTypeErrorWhenContainerGetReturnUnexpectedObject(): void
+    public function testInvokeRaiseTypeErrorWhenContainerGetReturnUnexpectedHttpClient(): void
     {
         $this->container->get(HttpClient::class)->willReturn(\uniqid(__METHOD__, true));
 

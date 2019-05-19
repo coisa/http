@@ -30,7 +30,7 @@ final class GuzzleHandlerFactoryTest extends TestCase
     /** @var ContainerInterface|ObjectProphecy */
     private $container;
 
-    /** @var ObjectProphecy|ClientInterface */
+    /** @var ClientInterface|ObjectProphecy */
     private $client;
 
     /** @var GuzzleHandlerFactory */
@@ -46,14 +46,14 @@ final class GuzzleHandlerFactoryTest extends TestCase
         $this->container->get(ClientInterface::class)->shouldBeCalledOnce()->will([$this->client, 'reveal']);
     }
 
-    public function testFactoryWithGuzzleClientWillReturnGuzzleHandler(): void
+    public function testInvokeWithGuzzleClientWillReturnGuzzleHandler(): void
     {
         $client = ($this->factory)($this->container->reveal());
 
         $this->assertInstanceOf(GuzzleHandler::class, $client);
     }
 
-    public function testFactoryRaiseTypeErrorWhenContainerGetReturnUnexpectedObject(): void
+    public function testInvokeRaiseTypeErrorWhenContainerGetReturnUnexpectedGuzzleClient(): void
     {
         $this->container->get(ClientInterface::class)->willReturn(\uniqid(__METHOD__, true));
 

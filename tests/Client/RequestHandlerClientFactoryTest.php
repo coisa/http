@@ -54,7 +54,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->container->get(ServerRequestFactoryInterface::class)->shouldBeCalledOnce()->will([$this->serverRequestFactory, 'reveal']);
     }
 
-    public function testFactoryWithRequestHandlerWithoutServerRequestFactoryReturnClient(): void
+    public function testInvokeWithRequestHandlerWithoutServerRequestFactoryReturnRequestHandlerClient(): void
     {
         $this->container->has(ServerRequestFactoryInterface::class)->willReturn(false);
 
@@ -66,7 +66,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
-    public function testFactoryWithRequestHandlerAndServerRequestFactoryReturnClient(): void
+    public function testInvokeWithRequestHandlerAndServerRequestFactoryReturnRequestHandlerClient(): void
     {
         $this->container->get(RequestHandlerInterface::class)->will([$this->requestHandler, 'reveal']);
         $this->container->get(ServerRequestFactoryInterface::class)->will([$this->serverRequestFactory, 'reveal']);
@@ -76,7 +76,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         $this->assertInstanceOf(RequestHandlerClient::class, $client);
     }
 
-    public function testFactoryRaiseTypeErrorIfServiceNotRequestHandler(): void
+    public function testInvokeRaiseTypeErrorWhenContainerGetReturnUnexpectedRequestHandler(): void
     {
         $this->container->get(RequestHandlerInterface::class)->willReturn(\uniqid(__METHOD__, true));
 
@@ -85,7 +85,7 @@ final class RequestHandlerClientFactoryTest extends TestCase
         ($this->factory)($this->container->reveal());
     }
 
-    public function testFactoryRaiseTypeErrorIfServiceNotServerRequestFactory(): void
+    public function testInvokeRaiseTypeErrorWhenContainerGetReturnUnexpectedServerRequestFactory(): void
     {
         $this->container->get(ServerRequestFactoryInterface::class)->willReturn(\uniqid(__METHOD__, true));
 
