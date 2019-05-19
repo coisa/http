@@ -22,7 +22,6 @@ use Phly\EventDispatcher\EventDispatcher;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -40,9 +39,9 @@ class Application implements ApplicationInterface
     /**
      * Application constructor.
      *
-     * @param DispatcherInterface $dispatcher
+     * @param DispatcherInterface     $dispatcher
      * @param RequestHandlerInterface $errorHandler
-     * @param EventDispatcher $eventDispatcher
+     * @param EventDispatcher         $eventDispatcher
      */
     public function __construct(
         DispatcherInterface $dispatcher,

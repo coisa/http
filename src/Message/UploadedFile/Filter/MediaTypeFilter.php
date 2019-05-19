@@ -41,20 +41,18 @@ final class MediaTypeFilter implements FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return UploadedFileInterface[]
+     * @return \Iterator
      */
-    public function filter(UploadedFileInterface ...$uploadedFiles): array
+    public function filter(UploadedFileInterface ...$uploadedFiles): \Iterator
     {
-        $filtered = [];
-
         foreach ($uploadedFiles as $uploadedFile) {
             $mediaType = $uploadedFile->getClientMediaType();
 
-            if ($mediaType === $this->mediaType) {
-                $filtered[] = $uploadedFile;
+            if ($mediaType !== $this->mediaType) {
+                continue;
             }
-        }
 
-        return $filtered;
+            yield $uploadedFile;
+        }
     }
 }

@@ -41,9 +41,9 @@ final class FilterAggregator implements FilterInterface
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return UploadedFileInterface[]
+     * @return \Iterator
      */
-    public function filter(UploadedFileInterface ...$uploadedFiles): array
+    public function filter(UploadedFileInterface ...$uploadedFiles): \Iterator
     {
         $filtered = clone $uploadedFiles;
 

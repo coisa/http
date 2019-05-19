@@ -35,29 +35,27 @@ final class ExtensionFilter implements FilterInterface
      */
     public function __construct(string $extension)
     {
-        $this->extension = \ltrim('.', $extension);
+        $this->extension = \ltrim($extension, '.');
     }
 
     /**
      * @param UploadedFileInterface ...$uploadedFiles
      *
-     * @return UploadedFileInterface[]
+     * @return \Iterator
      */
-    public function filter(UploadedFileInterface ...$uploadedFiles): array
+    public function filter(UploadedFileInterface ...$uploadedFiles): \Iterator
     {
-        $filtered = [];
-
         foreach ($uploadedFiles as $uploadedFile) {
             $extension = \pathinfo(
                 $uploadedFile->getClientFilename(),
                 PATHINFO_EXTENSION
             );
 
-            if ($extension === $this->extension) {
-                $filtered[] = $uploadedFile;
+            if ($extension !== $this->extension) {
+                continue;
             }
-        }
 
-        return $filtered;
+            yield $uploadedFile;
+        }
     }
 }
