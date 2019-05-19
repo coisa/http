@@ -40,7 +40,7 @@ final class HttpPlugHandlerFactory
     /**
      * @param HttpClient $client
      *
-     * @return GuzzleHandler
+     * @return HttpPlugHandler
      */
     public function fromHttpPlugClient(HttpClient $client): HttpPlugHandler
     {
