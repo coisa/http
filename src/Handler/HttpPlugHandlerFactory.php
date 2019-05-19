@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace CoiSA\Http\Client;
 
-use CoiSA\Http\Handler\GuzzleHandler;
 use CoiSA\Http\Handler\HttpPlugHandler;
 use Http\Client\HttpClient;
 use Psr\Container\ContainerInterface;

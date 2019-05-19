@@ -39,12 +39,12 @@ final class ErrorHandlerMiddleware implements MiddlewareInterface
     /**
      * ErrorHandlerMiddleware constructor.
      *
-     * @param RequestHandlerInterface $handler
+     * @param RequestHandlerInterface  $handler
      * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(RequestHandlerInterface $handler, EventDispatcherInterface $eventDispatcher)
     {
-        $this->handler = $handler;
+        $this->handler         = $handler;
         $this->eventDispatcher = $eventDispatcher;
     }
 
