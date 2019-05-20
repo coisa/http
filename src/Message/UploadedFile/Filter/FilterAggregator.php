@@ -52,7 +52,7 @@ final class FilterAggregator implements FilterInterface
                 break;
             }
 
-            $filtered = $filter->filter($filtered);
+            $filtered = $filter->filter(...$filtered);
         }
 
         return $filtered;
