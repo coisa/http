@@ -87,4 +87,22 @@ final class ExtensionFilterTest extends TestCase
             $this->uploadedFile->reveal(),
         ], $filtered);
     }
+
+    public function testFilterOnlyWithUnacceptableUploadedFilesWillReturnEmptyGenerator(): void
+    {
+        $uploadedFile = $this->prophesize(UploadedFileInterface::class);
+        $uploadedFile->getClientFilename()->willReturn(
+            \uniqid('filename', false) . '.invalid'
+        );
+
+        $input = [
+            $uploadedFile->reveal(),
+            $uploadedFile->reveal(),
+            $uploadedFile->reveal(),
+        ];
+
+        $filtered = \iterator_to_array($this->filter->filter(...$input));
+
+        $this->assertEmpty($filtered);
+    }
 }

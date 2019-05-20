@@ -83,4 +83,20 @@ final class MediaTypeFilterTest extends TestCase
             $this->uploadedFile->reveal(),
         ], $filtered);
     }
+
+    public function testFilterOnlyWithUnacceptableUploadedFilesWillReturnEmptyGenerator(): void
+    {
+        $uploadedFile = $this->prophesize(UploadedFileInterface::class);
+        $uploadedFile->getClientMediaType()->willReturn(\uniqid('invalid', false));
+
+        $input = [
+            $uploadedFile->reveal(),
+            $uploadedFile->reveal(),
+            $uploadedFile->reveal(),
+        ];
+
+        $filtered = \iterator_to_array($this->filter->filter(...$input));
+
+        $this->assertEmpty($filtered);
+    }
 }
