@@ -24,7 +24,7 @@ Please see [License File](LICENSE) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/coisa/http.svg?style=flat-square
 [ico-php]: https://img.shields.io/packagist/php-v/coisa/http.svg?style=flat-square
-[ico-license]: https://img.shields.io/github/license/coisa/http.svg?style=flat-square
+[ico-license]: https://img.shields.io/github/license/artificenerd/http.svg?style=flat-square
 [ico-build]: https://img.shields.io/scrutinizer/build/g/coisa/http/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/coisa/http.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/coisa/http.svg?style=flat-square
@@ -35,4 +35,4 @@ Please see [License File](LICENSE) for more information.
 [link-scrutinizer]: https://scrutinizer-ci.com/g/coisa/http/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/coisa/http
 [link-downloads]: https://packagist.org/packages/coisa/http
-[link-author]: https://github.com/coisa
+[link-author]: https://github.com/artificenerd
